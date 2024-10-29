@@ -23,8 +23,8 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npx prisma generate
-
+# RUN npx prisma generate
+RUN dotenv -e .env -- npx prisma generate
 RUN npm run build
 
 # Production image, copy all the files and run next

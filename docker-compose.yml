@@ -2,8 +2,7 @@ version: "3.9"
 services:
   aud:
     container_name: aud
-    # image: registry.cn-hangzhou.aliyuncs.com/glhub/aud
-    image: aud:latest
+    image: registry.cn-hangzhou.aliyuncs.com/glhub/aud:latest
     ports:
       - 4001:3000
     environment:
