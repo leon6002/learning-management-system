@@ -9,10 +9,10 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # 设置代理环境变量
-ARG http_proxy
-ARG https_proxy
-ENV http_proxy=$http_proxy
-ENV https_proxy=$https_proxy
+# ARG http_proxy
+# ARG https_proxy
+# ENV http_proxy=$http_proxy
+# ENV https_proxy=$https_proxy
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
@@ -23,9 +23,9 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# RUN npx prisma generate
-RUN npm install dotenv --save
-RUN npm run prisma:generate
+RUN npx prisma generate
+# RUN npm install dotenv --save
+# RUN npm run prisma:generate
 RUN npm run build
 
 # Production image, copy all the files and run next
