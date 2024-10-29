@@ -1,38 +1,46 @@
-import { db } from '@/lib/db';
-import { auth } from '@clerk/nextjs';
-import { NextResponse } from 'next/server';
+import { db } from "@/lib/db";
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
+import { redirect } from "next/navigation";
+import { HOME_ROUTE } from "@/routes";
 
 export async function POST(
-	req: Request,
-	{ params }: { params: { courseId: string } }
+  req: Request,
+  { params }: { params: Promise<{ courseId: string }> }
 ) {
-	try {
-		const { userId } = auth();
-		const { url } = await req.json();
+  try {
+    const session = await auth();
+    if (!session) {
+      return redirect(HOME_ROUTE);
+    }
+    const userId = session?.user?.id;
 
-		if (!userId) {
-			return new NextResponse('Unauthorized', { status: 401 });
-		}
+    const { courseId } = await params;
+    const { url } = await req.json();
 
-		const ownCourse = await db.course.findUnique({
-			where: { id: params.courseId, userId },
-		});
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
 
-		if (!ownCourse) {
-			return new NextResponse('Unauthorized', { status: 401 });
-		}
+    const ownCourse = await db.course.findUnique({
+      where: { id: courseId, userId },
+    });
 
-		const attachment = await db.attachment.create({
-			data: {
-				url,
-				name: url.split('/').pop(),
-				courseId: params.courseId,
-			},
-		});
+    if (!ownCourse) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
 
-		return NextResponse.json(attachment);
-	} catch (error) {
-		console.log('[ERROR] PATCH /api/courses/[courseId]', error);
-		return new NextResponse('Internal Server Error', { status: 500 });
-	}
+    const attachment = await db.attachment.create({
+      data: {
+        url,
+        name: url.split("/").pop(),
+        courseId: courseId,
+      },
+    });
+
+    return NextResponse.json(attachment);
+  } catch (error) {
+    console.log("[ERROR] PATCH /api/courses/[courseId]", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
 }

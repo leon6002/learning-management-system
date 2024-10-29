@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  aud:
+    container_name: aud
+    # image: registry.cn-hangzhou.aliyuncs.com/glhub/aud
+    image: aud:latest
+    ports:
+      - 4001:3000
+    environment:
+      - DUCK_DUCK_GO_BASE_URL= http://host.docker.internal:8304
+      - HTTP_PROXY=http://host.docker.internal:7897
+      - HTTPS_PROXY=http://host.docker.internal:7897
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

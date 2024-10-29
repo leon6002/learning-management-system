@@ -1,3 +1,6 @@
-export const isTeacher = (userId?: string | null) => {
-	return userId === process.env.NEXT_PUBLIC_TEACHER_ID;
+import { Session } from "next-auth";
+
+export const isTeacher = (session?: Session | null) => {
+  console.log("isTeacher:session: ", session);
+  return session?.user?.role === "TEACHER";
 };

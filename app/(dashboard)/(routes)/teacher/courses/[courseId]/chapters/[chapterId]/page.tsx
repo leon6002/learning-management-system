@@ -1,141 +1,151 @@
-import { IconBadge } from '@/components/icon-badge';
-import { db } from '@/lib/db';
-import { auth } from '@clerk/nextjs';
-import { ArrowLeft, Eye, LayoutDashboard, Video } from 'lucide-react';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import ChapterTitleForm from './_components/chapter-title-form';
-import ChapterDescriptionForm from './_components/chapter-description-form';
-import ChapterAccessForm from './_components/chapter-access-form';
-import ChapterVideoForm from './_components/chapter-video-form';
-import Banner from '@/components/banner';
-import ChapterActions from './_components/chapter-actions';
+import { IconBadge } from "@/components/icon-badge";
+import { db } from "@/lib/db";
+import { auth } from "@/auth";
+import { ArrowLeft, Eye, LayoutDashboard, Video } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import ChapterTitleForm from "./_components/chapter-title-form";
+import ChapterDescriptionForm from "./_components/chapter-description-form";
+import ChapterAccessForm from "./_components/chapter-access-form";
+import ChapterVideoForm from "./_components/chapter-video-form";
+import Banner from "@/components/banner";
+import ChapterActions from "./_components/chapter-actions";
+import ChapterContentForm from "./_components/chapter-content-form";
 
 const ChapterIdPage = async ({
-	params,
+  params,
 }: {
-	params: { courseId: string; chapterId: string };
+  params: Promise<{ courseId: string; chapterId: string }>;
 }) => {
-	const { userId } = auth();
+  const session = await auth();
+  if (!session) {
+    return redirect("/");
+  }
+  const userId = session?.user?.id;
 
-	if (!userId) {
-		return redirect('/');
-	}
+  if (!userId) {
+    return redirect("/");
+  }
+  const { courseId, chapterId } = await params;
+  const chapter = await db.chapter.findUnique({
+    where: {
+      id: chapterId,
+      courseId: courseId,
+    },
+    include: {
+      muxData: true,
+    },
+  });
 
-	const chapter = await db.chapter.findUnique({
-		where: {
-			id: params.chapterId,
-			courseId: params.courseId,
-		},
-		include: {
-			muxData: true,
-		},
-	});
+  if (!chapter) {
+    return redirect("/");
+  }
 
-	if (!chapter) {
-		return redirect('/');
-	}
+  const requiredFields = [chapter.title, chapter.description];
 
-	const requiredFields = [chapter.title, chapter.description, chapter.videoUrl];
+  const totalFields = requiredFields.length;
+  const completedFields = requiredFields.filter(Boolean).length;
 
-	const totalFields = requiredFields.length;
-	const completedFields = requiredFields.filter(Boolean).length;
+  const completionText = `${completedFields} of ${totalFields} fields completed`;
 
-	const completionText = `${completedFields} of ${totalFields} fields completed`;
+  const isComplete = requiredFields.every(Boolean);
 
-	const isComplete = requiredFields.every(Boolean);
+  return (
+    <>
+      {!chapter.isPublished && (
+        <Banner
+          variant={"warning"}
+          label="This chapter is unpublished. It will not be visible in the course"
+        />
+      )}
 
-	return (
-		<>
-			{!chapter.isPublished && (
-				<Banner
-					variant={'warning'}
-					label="This chapter is unpublished. It will not be visible in the course"
-				/>
-			)}
+      <div className="p-6">
+        <div className="flex items-center justify-center">
+          <div className="w-full">
+            <Link
+              href={`/teacher/courses/${courseId}`}
+              className="flex items-center text-sm hover:opacity-75 transition mb-6"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to course setup
+            </Link>
 
-			<div className="p-6">
-				<div className="flex items-center justify-center">
-					<div className="w-full">
-						<Link
-							href={`/teacher/courses/${params.courseId}`}
-							className="flex items-center text-sm hover:opacity-75 transition mb-6"
-						>
-							<ArrowLeft className="h-4 w-4 mr-2" />
-							Back to course setup
-						</Link>
+            <div className="flex items-center justify-between w-full">
+              <div className="flex flex-col gap-y-2">
+                <h1 className="text-2xl font-medium">Chapter Creation</h1>
 
-						<div className="flex items-center justify-between w-full">
-							<div className="flex flex-col gap-y-2">
-								<h1 className="text-2xl font-medium">Chapter Creation</h1>
+                <span className="text-sm text-slate-700">{completionText}</span>
+              </div>
 
-								<span className="text-sm text-slate-700">{completionText}</span>
-							</div>
+              <ChapterActions
+                disabled={!isComplete}
+                courseId={courseId}
+                chapterId={chapterId}
+                isPublished={chapter.isPublished}
+              />
+            </div>
+          </div>
+        </div>
 
-							<ChapterActions
-								disabled={!isComplete}
-								courseId={params.courseId}
-								chapterId={params.chapterId}
-								isPublished={chapter.isPublished}
-							/>
-						</div>
-					</div>
-				</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+          <div className="space-y-4">
+            <div>
+              <div className="flex items-center gap-x-2">
+                <IconBadge icon={LayoutDashboard} />
 
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
-					<div className="space-y-4">
-						<div>
-							<div className="flex items-center gap-x-2">
-								<IconBadge icon={LayoutDashboard} />
+                <h2 className="text-xl">Customize your chapter</h2>
+              </div>
 
-								<h2 className="text-xl">Customize your chapter</h2>
-							</div>
+              <ChapterTitleForm
+                initialData={chapter}
+                chapterId={chapter.id}
+                courseId={chapter.courseId}
+              />
 
-							<ChapterTitleForm
-								initialData={chapter}
-								chapterId={chapter.id}
-								courseId={chapter.courseId}
-							/>
+              <ChapterDescriptionForm
+                initialData={chapter}
+                chapterId={chapter.id}
+                courseId={chapter.courseId}
+              />
+            </div>
 
-							<ChapterDescriptionForm
-								initialData={chapter}
-								chapterId={chapter.id}
-								courseId={chapter.courseId}
-							/>
-						</div>
+            <div>
+              <div className="flex items-center gap-x-2">
+                <IconBadge icon={Eye} />
 
-						<div>
-							<div className="flex items-center gap-x-2">
-								<IconBadge icon={Eye} />
+                <h2 className="text-xl">Access Settings</h2>
+              </div>
 
-								<h2 className="text-xl">Access Settings</h2>
-							</div>
+              <ChapterAccessForm
+                initialData={chapter}
+                chapterId={chapter.id}
+                courseId={chapter.courseId}
+              />
+            </div>
+          </div>
 
-							<ChapterAccessForm
-								initialData={chapter}
-								chapterId={chapter.id}
-								courseId={chapter.courseId}
-							/>
-						</div>
-					</div>
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={Video} />
 
-					<div>
-						<div className="flex items-center gap-x-2">
-							<IconBadge icon={Video} />
+              <h2 className="text-xl">Add a video</h2>
+            </div>
 
-							<h2 className="text-xl">Add a video</h2>
-						</div>
-
-						<ChapterVideoForm
-							initialData={chapter}
-							chapterId={chapter.id}
-							courseId={chapter.courseId}
-						/>
-					</div>
-				</div>
-			</div>
-		</>
-	);
+            <ChapterVideoForm
+              initialData={chapter}
+              chapterId={chapter.id}
+              courseId={chapter.courseId}
+            />
+            <ChapterContentForm
+              initialData={chapter}
+              chapterId={chapter.id}
+              courseId={chapter.courseId}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default ChapterIdPage;
