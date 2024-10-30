@@ -13,11 +13,11 @@ const nextConfig = {
     // ESLint behaves weirdly in this monorepo.
     ignoreDuringBuilds: true,
   },
-  compiler: {
-    removeConsole: {
-      exclude: ["error"],
-    },
-  },
+  // compiler: {
+  //   removeConsole: {
+  //     exclude: ["error"],
+  //   },
+  // },
   webpack(config) {
     // rule.exclude doesn't work starting from Next.js 15
     const { test: _test, ...imageLoaderOptions } = config.module.rules.find(

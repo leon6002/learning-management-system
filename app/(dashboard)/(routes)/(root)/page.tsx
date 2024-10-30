@@ -30,7 +30,8 @@ const Dashboard = () => {
   const userId = session?.user.id as string;
   console.log(`userId is ${userId}`);
   if (!userId) {
-    redirect(LOGIN_ROUTE);
+    // redirect(LOGIN_ROUTE);
+    // redirect("/search");
   }
   // if (isTeacher(session)) redirect(TEACHER_ROUTE);
 

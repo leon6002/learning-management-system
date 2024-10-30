@@ -23,26 +23,60 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const purchase = await db.purchase.findUnique({
+    // const purchase = await db.purchase.findUnique({
+    //   where: {
+    //     userId_courseId: {
+    //       userId,
+    //       courseId,
+    //     },
+    //   },
+    // });
+
+    // if (!purchase) {
+    //   return new NextResponse("Unauthorized", { status: 401 });
+    // }
+    const note = await db.note.findFirst({
       where: {
-        userId_courseId: {
-          userId,
-          courseId,
-        },
+        userId: userId,
+        chapterId: chapterId,
       },
     });
-
-    if (!purchase) {
-      return new NextResponse("Unauthorized", { status: 401 });
+    if (note === null) {
+      const newNote = await db.note.create({
+        data: {
+          userId,
+          chapterId,
+          content,
+        },
+      });
+      return NextResponse.json(newNote);
     }
 
-    const note = await db.note.create({
+    await db.note.update({
+      where: {
+        id: note.id,
+      },
       data: {
         content,
-        chapterId,
-        userId,
       },
     });
+
+    // const note = await db.note.upsert({
+    //   where: {
+    //     userId: userId,
+    //     chapterId: chapterId,
+    //   },
+    //   create: {
+    //       content,
+    //       chapterId,
+    //       userId,
+
+    //   },
+    //   update: {
+    //     content
+    //   }
+
+    // });
 
     return NextResponse.json(note);
   } catch (error) {
@@ -61,25 +95,25 @@ export async function GET(
       return redirect("/");
     }
     const userId = session?.user?.id;
-
+    console.log("userId is: ", userId);
     const { courseId, chapterId } = await params;
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const purchase = await db.purchase.findUnique({
-      where: {
-        userId_courseId: {
-          userId,
-          courseId,
-        },
-      },
-    });
+    // const purchase = await db.purchase.findUnique({
+    //   where: {
+    //     userId_courseId: {
+    //       userId,
+    //       courseId,
+    //     },
+    //   },
+    // });
 
-    if (!purchase) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    // if (!purchase) {
+    //   return new NextResponse("Unauthorized", { status: 401 });
+    // }
 
     const notes = await db.note.findMany({
       where: {
@@ -105,6 +139,7 @@ export async function PATCH(
       return redirect("/");
     }
     const userId = session?.user?.id;
+    console.log("userId is: ", userId);
 
     const { chapterId } = await params;
 
