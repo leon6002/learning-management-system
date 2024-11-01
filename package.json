@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "npx prisma generate",
-    "prisma:push": "dotenv -e .env.production -- npx prisma db push"
+    "prisma:push": "dotenv -e .env.development -- npx prisma db push"
   },
   "dependencies": {
     "@alicloud/facebody20191230": "^5.1.2",
