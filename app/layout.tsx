@@ -12,7 +12,7 @@ import FacebookMessenger from '@/components/facebook-messenger';
 // const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Audesse',
+  title: 'Audesse在线教育招聘平台',
   description: 'Audesse在线教育平台',
   icons: '/logoVector_32.svg',
 };
@@ -25,11 +25,11 @@ export default async function RootLayout({
   const session = await auth();
 
   return (
-    <html lang="zh" suppressHydrationWarning>
+    <html lang='zh' suppressHydrationWarning>
       <body>
         <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
+          attribute='class'
+          defaultTheme='light'
           enableSystem
           disableTransitionOnChange
         >
