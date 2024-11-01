@@ -1,9 +1,9 @@
-import Mux from "@mux/mux-node";
-import { db } from "@/lib/db";
-import { auth } from "@/auth";
-import { NextResponse } from "next/server";
-import { redirect } from "next/navigation";
-import { HOME_ROUTE } from "@/routes";
+import Mux from '@mux/mux-node';
+import { db } from '@/lib/db';
+import { auth } from '@/auth';
+import { NextResponse } from 'next/server';
+import { redirect } from 'next/navigation';
+import { HOME_ROUTE } from '@/routes';
 
 // const { Video } = new Mux(
 //   process.env.MUX_TOKEN_ID!,
@@ -23,7 +23,7 @@ export async function DELETE(
     const { courseId } = await params;
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const course = await db.course.findUnique({
@@ -38,7 +38,7 @@ export async function DELETE(
     });
 
     if (!course) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     for (const chapter of course.chapters) {
@@ -54,8 +54,8 @@ export async function DELETE(
 
     return NextResponse.json(deletedCourse);
   } catch (error) {
-    console.log("[ERROR] DELETE /api/courses/[courseId]", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    console.log('[ERROR] DELETE /api/courses/[courseId]', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
 
@@ -73,7 +73,7 @@ export async function PATCH(
     const values = await req.json();
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const course = await db.course.update({
@@ -83,8 +83,8 @@ export async function PATCH(
 
     return NextResponse.json(course);
   } catch (error) {
-    console.log("[ERROR] PATCH /api/courses/[courseId]", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    console.log('[ERROR] PATCH /api/courses/[courseId]', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
 
@@ -100,7 +100,7 @@ export async function GET(
     const userId = session?.user?.id;
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
     const { courseId } = await params;
     const course = await db.course.findUnique({
@@ -111,19 +111,23 @@ export async function GET(
         chapters: {
           where: { isPublished: true },
           include: { userProgresses: { where: { userId } } },
-          orderBy: { position: "asc" },
+          orderBy: { position: 'asc' },
+        },
+        purchases: {
+          where: { userId: userId, courseId: courseId },
+          select: { id: true },
         },
       },
     });
 
     if (!course) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     return NextResponse.json(course);
   } catch (error) {
-    console.log("[ERROR] GET /api/courses/[courseId]", error);
+    console.log('[ERROR] GET /api/courses/[courseId]', error);
 
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

@@ -19,7 +19,6 @@ const CourseEnrollButton = ({ courseId, price }: CourseEnrollButtonProps) => {
       setIsLoading(true);
 
       const response = await axios.post(`/api/courses/${courseId}/checkout`);
-
       // redirect to the checkout page
       window.location.assign(response.data.url);
     } catch (error) {

@@ -1,7 +1,7 @@
-import { auth } from "@/auth";
-import { db } from "@/lib/db";
+import { auth } from '@/auth';
+import { db } from '@/lib/db';
 // import { currentUser } from "@clerk/nextjs";
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 // import Stripe from "stripe";
 // import { stripe } from "@/lib/stripe";
 
@@ -12,13 +12,13 @@ export async function POST(
   try {
     const session = await auth();
     if (!session) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
     const user = session?.user;
     const { courseId } = await params;
 
     if (!user || !user.id) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const course = await db.course.findUnique({
@@ -35,11 +35,25 @@ export async function POST(
     });
 
     if (purchase) {
-      return new NextResponse("Already purchased", { status: 400 });
+      return new NextResponse('Already purchased', { status: 400 });
     }
 
     if (!course) {
-      return new NextResponse("Course not found", { status: 404 });
+      return new NextResponse('Course not found', { status: 404 });
+    }
+
+    const hookRes = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/webhook`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ courseId: courseId, userId: user.id }),
+    });
+
+    if (hookRes.ok) {
+      return NextResponse.json({
+        url: `${process.env.NEXT_PUBLIC_HOST}/courses/${course.id}?success=1`,
+      });
     }
 
     // const lineItems: Stripe.Checkout.SessionCreateLineItem[] = [
@@ -87,12 +101,8 @@ export async function POST(
     // });
 
     // return NextResponse.json({ url: session.url });
-    return NextResponse.json({
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}?success=1`,
-    });
   } catch (error) {
-    console.log("[ERROR] POST /api/courses/[courseId]/checkout/route.ts");
-
-    return new NextResponse("Internal server error", { status: 500 });
+    console.log('[ERROR] POST /api/courses/[courseId]/checkout/route.ts');
   }
+  return new NextResponse('Internal server error', { status: 500 });
 }

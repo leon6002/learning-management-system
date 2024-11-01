@@ -1,24 +1,31 @@
 // use client to avoid SSR error
 'use client';
 
-import { ActivitySquare, BarChart, Compass, Layout, List } from 'lucide-react';
+import {
+  ActivitySquare,
+  BarChart,
+  Compass,
+  Layout,
+  List,
+  UserCog,
+} from 'lucide-react';
 import SidebarItem from './sidebar-item';
 import { usePathname } from 'next/navigation';
 
 const learnerRoutes = [
   {
     icon: Layout,
-    label: 'Dashboard',
+    label: '我的课程',
     href: '/',
   },
   {
     icon: Compass,
-    label: 'Browse',
+    label: '浏览课程',
     href: '/search',
   },
   {
-    icon: ActivitySquare,
-    label: 'Customization',
+    icon: UserCog,
+    label: '个人中心',
     href: '/personalization',
   },
   // {
@@ -31,12 +38,12 @@ const learnerRoutes = [
 const teacherRoutes = [
   {
     icon: List,
-    label: 'Courses',
+    label: '课程创作中心',
     href: '/teacher/courses',
   },
   {
     icon: BarChart,
-    label: 'Analystics',
+    label: '数据',
     href: '/teacher/analytics',
   },
 ];

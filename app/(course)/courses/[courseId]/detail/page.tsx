@@ -12,6 +12,7 @@ import FeedbackForm from './_components/feedback-form';
 import { useEffect, useState, use } from 'react';
 import axios from 'axios';
 import { Feedback as Feedback, UserRole } from '@prisma/client';
+import CourseEnrollButton from '../chapters/[chapterId]/_components/course-enroll-button';
 
 const CourseDetailPage = ({
   params,
@@ -89,7 +90,14 @@ const CourseDetailPage = ({
           </div>
 
           <div className='px-4'>
-            <Button className='mt-4 w-full'>继续学习</Button>
+            {course?.purchases.length == 0 ? (
+              <CourseEnrollButton courseId={courseId} price={course.price!} />
+            ) : (
+              <Button variant='success' className='mt-4 w-full' disabled>
+                已注册该课程
+              </Button>
+              // <div></div>
+            )}
           </div>
         </div>
 

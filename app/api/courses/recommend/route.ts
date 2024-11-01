@@ -1,9 +1,9 @@
-import { db } from "@/lib/db";
-import { RecommendCourse } from "@/types";
-import { auth } from "@/auth";
-import { Course, CourseStatistic, Purchase } from "@prisma/client";
-import { NextResponse } from "next/server";
-import { redirect } from "next/navigation";
+import { db } from '@/lib/db';
+import { RecommendCourse } from '@/types';
+import { auth } from '@/auth';
+import { Course, CourseStatistic, Purchase } from '@prisma/client';
+import { NextResponse } from 'next/server';
+import { redirect } from 'next/navigation';
 
 interface QuantityByCategory {
   [key: string]: number;
@@ -42,7 +42,7 @@ const getRecommendedCourses = (
   purchasedCourses: { course: Course }[]
 ): RecommendCourse[] => {
   const coursesWithViews = courseStatistics
-    .filter((courseStatistic) => courseStatistic.categoryId === categoryId)
+    // .filter((courseStatistic) => courseStatistic.categoryId === categoryId)
     .map((courseStatistic) => {
       return { ...courseStatistic };
     });
@@ -69,12 +69,12 @@ const GET = async (req: Request) => {
   try {
     const session = await auth();
     if (!session) {
-      return redirect("/");
+      return redirect('/');
     }
     const userId = session?.user?.id;
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const purchasedCourses = await db.purchase.findMany({
@@ -102,8 +102,8 @@ const GET = async (req: Request) => {
 
     return NextResponse.json(recommendCourses);
   } catch (error) {
-    console.log("[ERROR] GET /api/courses/recommend", error);
-    return new NextResponse("Internal server error", { status: 500 });
+    console.log('[ERROR] GET /api/courses/recommend', error);
+    return new NextResponse('Internal server error', { status: 500 });
   }
 };
 
