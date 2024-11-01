@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { OutputData } from '@editorjs/editorjs';
+// import { DotPatternBackgroud } from '@/components/background/dot-pattern-backgroud';
+// import { GridPatternBackGround } from '@/components/background/grid-pattern-background';
 
 // import AddNoteModal from "@/components/modals/add-note-modal";
 // import { Button } from "@/components/ui/button";
@@ -92,7 +94,7 @@ const Notes = ({ courseId, chapterId, userId }: Props) => {
   // };
 
   return (
-    <div className='mt-14'>
+    <div className='relative mt-14'>
       <Separator />
 
       <div className='p-4 flex flex-col md:flex-row items-center justify-between'>
@@ -137,6 +139,8 @@ const Notes = ({ courseId, chapterId, userId }: Props) => {
           />
         )}
       </div>
+      {/* <DotPatternBackgroud /> */}
+      {/* <GridPatternBackGround /> */}
     </div>
   );
 };

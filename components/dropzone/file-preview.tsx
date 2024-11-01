@@ -28,7 +28,7 @@ const FilePreview = ({ fileList, onRemove }: FilePreviewProps) => {
                   src={fileToUrl(file) || '/no-image.jpg'}
                   alt={file.name}
                   fill
-                  className='rounded-sm shadow-sm'
+                  className='rounded-sm shadow-sm object-cover'
                 />
               </div>
 

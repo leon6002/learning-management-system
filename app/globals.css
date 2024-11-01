@@ -80,6 +80,30 @@ body,
   body {
     @apply bg-background text-foreground;
   }
+
+  h1 {
+    @apply block font-bold text-2xl mt-4 mb-4;
+  }
+
+  h2 {
+    @apply block font-bold text-xl mt-6 mb-6;
+  }
+
+  h3 {
+    @apply block font-bold text-lg mt-8 mb-8;
+  }
+
+  h4 {
+    @apply block font-bold mt-10 mb-10;
+  }
+
+  h5 {
+    @apply block font-bold text-sm mt-12 mb-12;
+  }
+
+  h6 {
+    @apply block font-bold text-xs mt-16 mb-16;
+  }
 }
 
 .ql-container {
@@ -125,7 +149,8 @@ body,
 }
 .image-tool__image-picture {
   border-radius: 8px !important;
-  box-shadow: 0 2px 6px 0px rgba(0, 0, 0, 0.2),
+  box-shadow:
+    0 2px 6px 0px rgba(0, 0, 0, 0.2),
     0 4px 8px 0px rgba(0, 0, 0, 0.19) !important;
   -webkit-border-radius: 8px !important;
   -moz-border-radius: 8px !important;
@@ -133,4 +158,4 @@ body,
   -o-border-radius: 8px !important;
 }
 
-@import "@uploadthing/react/styles.css";
+@import '@uploadthing/react/styles.css';

@@ -217,13 +217,7 @@ const BlockTextEditor = ({
     <div className='w-full flex justify-center'>
       <div
         id={holder}
-        style={{
-          width: '100%',
-          minHeight: 300,
-          borderRadius: ' 7px',
-          background: 'fff',
-        }}
-        className='prose prose:max-w-full prose-code:text-slate-600 prose-pre:bg-transparent dark:text-white dark:prose-headings:text-white'
+        className='prose prose:max-w-full prose-code:text-slate-600 prose-pre:bg-transparent dark:text-white dark:prose-headings:text-white w-full min-h-[300px]'
       ></div>
     </div>
   );

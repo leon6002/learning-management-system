@@ -1,22 +1,23 @@
-"use client";
+'use client';
 
-import CoursesList from "@/components/courses-list";
-import { CheckCircle, Clock, LayoutDashboard } from "lucide-react";
-import InfoCard from "./_components/info-card";
-import { useEffect, useState } from "react";
-import { Category, Chapter, Course, CourseStatistic } from "@prisma/client";
-import axios from "axios";
-import { STORAGE_KEY } from "@/constants/storage";
-import { DASHBOARD_ITEM_ID } from "@/constants/dashboard-item-id";
-import { cn } from "@/lib/utils";
+import CoursesList from '@/components/courses-list';
+import { CheckCircle, Clock, LayoutDashboard } from 'lucide-react';
+import InfoCard from './_components/info-card';
+import { useEffect, useState } from 'react';
+import { Category, Chapter, Course, CourseStatistic } from '@prisma/client';
+import axios from 'axios';
+import { STORAGE_KEY } from '@/constants/storage';
+import { DASHBOARD_ITEM_ID } from '@/constants/dashboard-item-id';
+import { cn } from '@/lib/utils';
 // import { useAuth } from '@clerk/nextjs';
-import { isTeacher } from "@/lib/teacher";
-import { redirect } from "next/navigation";
-import { IconBadge } from "@/components/icon-badge";
-import { RecommendCourse } from "@/types";
-import RecommendedCourses from "@/components/recommended-courses";
-import { useSession } from "next-auth/react";
-import { LOGIN_ROUTE, TEACHER_ROUTE } from "@/routes";
+// import { isTeacher } from '@/lib/teacher';
+// import { redirect } from 'next/navigation';
+import { IconBadge } from '@/components/icon-badge';
+import { RecommendCourse } from '@/types';
+import RecommendedCourses from '@/components/recommended-courses';
+import { useSession } from 'next-auth/react';
+// import { LOGIN_ROUTE, TEACHER_ROUTE } from '@/routes';
+// import { DotPatternBackgroud } from '@/components/background/dot-pattern-backgroud';
 
 type CourseWithProgressWithCategory = Course & {
   category: Category;
@@ -26,7 +27,7 @@ type CourseWithProgressWithCategory = Course & {
 
 const Dashboard = () => {
   const { data: session } = useSession();
-  console.log("session is", session);
+  console.log('session is', session);
   const userId = session?.user.id as string;
   console.log(`userId is ${userId}`);
   if (!userId) {
@@ -46,19 +47,19 @@ const Dashboard = () => {
   useEffect(() => {
     const setDataFromLocalStorageToStates = () => {
       setCompletedCourses(
-        JSON.parse(localStorage.getItem(STORAGE_KEY.completedCourses) || "[]")
+        JSON.parse(localStorage.getItem(STORAGE_KEY.completedCourses) || '[]')
       );
 
       setCoursesInProgress(
-        JSON.parse(localStorage.getItem(STORAGE_KEY.coursesInProgress) || "[]")
+        JSON.parse(localStorage.getItem(STORAGE_KEY.coursesInProgress) || '[]')
       );
 
       setDashboardSetting(
-        JSON.parse(localStorage.getItem(STORAGE_KEY.dashboardSetting) || "[]")
+        JSON.parse(localStorage.getItem(STORAGE_KEY.dashboardSetting) || '[]')
       );
 
       setRecommendedCourses(
-        JSON.parse(localStorage.getItem(STORAGE_KEY.recommendedCourse) || "[]")
+        JSON.parse(localStorage.getItem(STORAGE_KEY.recommendedCourse) || '[]')
       );
     };
 
@@ -91,7 +92,7 @@ const Dashboard = () => {
     (async () => {
       try {
         const res = await axios.get(`/api/courses/recommend`);
-        console.log("res", res);
+        console.log('res', res);
         setRecommendedCourses(res.data);
 
         localStorage.setItem(
@@ -120,17 +121,17 @@ const Dashboard = () => {
           );
         }
       } catch (error) {
-        console.log("ERROR IN DASHBOARD", error);
+        console.log('ERROR IN DASHBOARD', error);
       }
     })();
   }, []);
 
   return (
-    <div className="p-6 space-y-4">
+    <div className='p-6 space-y-4'>
       <div
         className={cn(
-          "grid grid-cols-1 sm:grid-cols-2 gap-4",
-          dashboardSetting?.length === 1 && "sm:grid-cols-1"
+          'grid grid-cols-1 sm:grid-cols-2 gap-4',
+          dashboardSetting?.length === 1 && 'sm:grid-cols-1'
         )}
       >
         {coursesInProgress &&
@@ -140,12 +141,12 @@ const Dashboard = () => {
             <div>
               <InfoCard
                 icon={Clock}
-                label="In Progress"
+                label='In Progress'
                 numberOfItems={coursesInProgress.length}
               />
 
               <CoursesList
-                size={dashboardSetting?.length === 1 ? "sm" : "lg"}
+                size={dashboardSetting?.length === 1 ? 'sm' : 'lg'}
                 items={coursesInProgress}
               />
             </div>
@@ -158,24 +159,24 @@ const Dashboard = () => {
             <div>
               <InfoCard
                 icon={CheckCircle}
-                label="Completed"
-                variant="success"
+                label='Completed'
+                variant='success'
                 numberOfItems={completedCourses.length}
               />
 
               <CoursesList
-                size={dashboardSetting?.length === 1 ? "sm" : "lg"}
+                size={dashboardSetting?.length === 1 ? 'sm' : 'lg'}
                 items={completedCourses}
               />
             </div>
           )}
       </div>
 
-      <div className="pt-10 !mt-10 border-t-2 border-gray-200 dark:border-gray-700">
-        <div className="pb-6 flex items-center gap-x-2">
+      <div className='pt-10 !mt-10 border-t-2 border-gray-200 dark:border-gray-700'>
+        <div className='pb-6 flex items-center gap-x-2'>
           <IconBadge icon={LayoutDashboard} />
 
-          <h2 className="text-xl">Recommended for you</h2>
+          <h2 className='text-xl'>Recommended for you</h2>
         </div>
 
         {recommendedCourses && (

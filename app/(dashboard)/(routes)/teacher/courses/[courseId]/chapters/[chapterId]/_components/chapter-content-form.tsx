@@ -6,6 +6,10 @@ import { useState } from 'react';
 import { Chapter } from '@prisma/client';
 import dynamic from 'next/dynamic';
 import { OutputData } from '@editorjs/editorjs';
+// import { GridPatternBackGround } from '@/components/background/grid-pattern-background';
+// import { DotPatternBackgroud } from '@/components/background/dot-pattern-backgroud';
+import DotPattern from '@/components/ui/dot-pattern';
+import { cn } from '@/lib/utils';
 
 interface ChapterContentFormProps {
   initialData: Chapter;
@@ -47,10 +51,20 @@ const ChapterContentForm = ({
   };
 
   return (
-    <div className='mt-6 border bg-slate-50  dark:bg-gray-900 rounded-md p-4'>
+    <div className='relative mt-6 border bg-slate-50  dark:bg-gray-900 rounded-md p-4'>
       <div className='font-medium flex items-center justify-between'>
         章节内容（必填）
       </div>
+      <DotPattern
+        width={35}
+        height={30}
+        cx={10}
+        cy={10}
+        cr={0.8}
+        className={cn(
+          '[mask-image:linear-gradient(to_bottom,white,transparent,transparent)] '
+        )}
+      />
 
       {editorContent !== undefined && (
         <BlockTextEditor
