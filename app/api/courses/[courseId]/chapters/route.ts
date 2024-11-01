@@ -1,8 +1,8 @@
-import { db } from "@/lib/db";
-import { auth } from "@/auth";
-import { NextResponse } from "next/server";
-import { redirect } from "next/navigation";
-import { HOME_ROUTE } from "@/routes";
+import { db } from '@/lib/db';
+import { auth } from '@/auth';
+import { NextResponse } from 'next/server';
+import { redirect } from 'next/navigation';
+import { HOME_ROUTE } from '@/routes';
 
 export async function POST(
   req: Request,
@@ -17,7 +17,7 @@ export async function POST(
     const userId = session?.user?.id;
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const ownCourse = await db.course.findUnique({
@@ -25,12 +25,12 @@ export async function POST(
     });
 
     if (!ownCourse) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const lastChapter = await db.chapter.findFirst({
       where: { courseId },
-      orderBy: { position: "desc" },
+      orderBy: { position: 'desc' },
     });
 
     const newPosition = lastChapter ? lastChapter.position + 1 : 1;
@@ -41,13 +41,14 @@ export async function POST(
       data: {
         title,
         courseId,
+        isFree: true,
         position: newPosition,
       },
     });
 
     return NextResponse.json(chapter);
   } catch (error) {
-    console.log("[ERROR] POST /api/courses/[courseId]/chapters", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    console.log('[ERROR] POST /api/courses/[courseId]/chapters', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

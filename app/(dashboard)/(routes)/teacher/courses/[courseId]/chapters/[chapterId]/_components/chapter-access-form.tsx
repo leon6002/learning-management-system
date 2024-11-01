@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import * as z from "zod";
-import axios from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import * as z from 'zod';
+import axios from 'axios';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 import {
   Form,
@@ -12,17 +12,15 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { Chapter } from "@prisma/client";
-import { Editor } from "@/components/editor";
-import { Preview } from "@/components/preview";
-import { Checkbox } from "@/components/ui/checkbox";
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Pencil } from 'lucide-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { Chapter } from '@prisma/client';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface ChapterAccessFormProps {
   initialData: Chapter;
@@ -61,24 +59,24 @@ const ChapterAccessForm = ({
         values
       );
 
-      toast.success("Chapter updated");
+      toast.success('Chapter updated');
       toggleEdit();
       router.refresh();
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     }
   };
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
+    <div className='mt-6 border bg-slate-50  dark:bg-gray-900 rounded-md p-4'>
+      <div className='font-medium flex items-center justify-between'>
         章节权限
-        <Button variant={"ghost"} onClick={toggleEdit}>
+        <Button variant={'ghost'} onClick={toggleEdit}>
           {isEditing ? (
             <>取消</>
           ) : (
             <>
-              <Pencil className="h-4 w-4 mr-2" />
+              <Pencil className='h-4 w-4 mr-2' />
               修改
             </>
           )}
@@ -88,11 +86,11 @@ const ChapterAccessForm = ({
       {!isEditing && (
         <p
           className={cn(
-            "text-sm mt-2",
-            !initialData.isFree && "text-slate-500 italic"
+            'text-sm mt-2',
+            !initialData.isFree && 'text-slate-500 italic'
           )}
         >
-          {initialData.isFree ? "本章节免费" : "本章节不免费"}
+          {initialData.isFree ? '本章节免费' : '本章节不免费'}
         </p>
       )}
 
@@ -100,13 +98,13 @@ const ChapterAccessForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
+            className='space-y-4 mt-4'
           >
             <FormField
               control={form.control}
-              name="isFree"
+              name='isFree'
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
                   <FormControl>
                     <Checkbox
                       checked={field.value}
@@ -114,7 +112,7 @@ const ChapterAccessForm = ({
                     />
                   </FormControl>
 
-                  <div className="space-y-1 leading-none">
+                  <div className='space-y-1 leading-none'>
                     <FormDescription>勾选此处，如果本章节免费</FormDescription>
                   </div>
                   <FormMessage />
@@ -122,8 +120,8 @@ const ChapterAccessForm = ({
               )}
             />
 
-            <div className="flex items-center gap-x-2">
-              <Button disabled={!isValid || isSubmitting} type="submit">
+            <div className='flex items-center gap-x-2'>
+              <Button disabled={!isValid || isSubmitting} type='submit'>
                 保存
               </Button>
             </div>

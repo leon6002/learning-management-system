@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import * as z from "zod";
-import axios from "axios";
-import { File, Loader2, PlusCircle, X } from "lucide-react";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import { Attachment, Course } from "@prisma/client";
+import * as z from 'zod';
+import axios from 'axios';
+import { File, Loader2, PlusCircle, X } from 'lucide-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import { Attachment, Course } from '@prisma/client';
 
-import { Button } from "@/components/ui/button";
-import FileUpload from "@/components/file-upload";
+import { Button } from '@/components/ui/button';
+import FileUpload from '@/components/file-upload';
 
 interface AttachmentFormProps {
   initialData: Course & { attachments: Attachment[] };
@@ -32,11 +32,11 @@ const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) => {
     try {
       await axios.post(`/api/courses/${courseId}/attachments`, values);
 
-      toast.success("Course updated");
+      toast.success('Course updated');
       toggleEdit();
       router.refresh();
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     }
   };
 
@@ -46,25 +46,25 @@ const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) => {
     try {
       await axios.delete(`/api/courses/${courseId}/attachments/${id}`);
 
-      toast.success("Attachment deleted");
+      toast.success('Attachment deleted');
       router.refresh();
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     } finally {
       setDeletingId(null);
     }
   };
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
+    <div className='mt-6 border bg-slate-50  dark:bg-gray-900 rounded-md p-4'>
+      <div className='font-medium flex items-center justify-between'>
         课程附件
-        <Button variant={"ghost"} onClick={toggleEdit}>
+        <Button variant={'ghost'} onClick={toggleEdit}>
           {isEditing && <>Cancel</>}
 
           {!isEditing && (
             <>
-              <PlusCircle className="h-4 w-4 mr-2" />
+              <PlusCircle className='h-4 w-4 mr-2' />
               添加文件
             </>
           )}
@@ -74,34 +74,32 @@ const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) => {
       {!isEditing && (
         <>
           {initialData.attachments.length === 0 && (
-            <p className="text-sm text-slate-500 mt-2 italic">
-              No attachments added
-            </p>
+            <p className='text-sm text-slate-500 mt-2 italic'>无附件</p>
           )}
 
           {initialData.attachments.length > 0 && (
-            <div className="space-y-2">
+            <div className='space-y-2'>
               {initialData.attachments.map((attachment) => (
                 <div
                   key={attachment.id}
-                  className="flex items-center p-3 w-full bg-sky-100 border-sky-200 border text-sky-700 rounded-md"
+                  className='flex items-center p-3 w-full bg-sky-100 border-sky-200 border text-sky-700 rounded-md'
                 >
-                  <File className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <File className='h-4 w-4 mr-2 flex-shrink-0' />
 
-                  <p className="text-xs line-clamp-1">{attachment.name}</p>
+                  <p className='text-xs line-clamp-1'>{attachment.name}</p>
 
                   {deletingId === attachment.id && (
-                    <div className="ml-auto">
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                    <div className='ml-auto'>
+                      <Loader2 className='h-4 w-4 animate-spin' />
                     </div>
                   )}
 
                   {deletingId !== attachment.id && (
                     <button
                       onClick={() => onDelete(attachment.id)}
-                      className="ml-auto hover:opacity-75 transition"
+                      className='ml-auto hover:opacity-75 transition'
                     >
-                      <X className="h-4 w-4" />
+                      <X className='h-4 w-4' />
                     </button>
                   )}
                 </div>
@@ -114,7 +112,7 @@ const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) => {
       {isEditing && (
         <div>
           <FileUpload
-            endpoint="courseAttachment"
+            endpoint='courseAttachment'
             onChange={(url?: string) => {
               if (url) {
                 onSubmit({ url });
@@ -122,7 +120,7 @@ const AttachmentForm = ({ initialData, courseId }: AttachmentFormProps) => {
             }}
           />
 
-          <div className="text-xs text-muted-foreground mt-4">
+          <div className='text-xs text-muted-foreground mt-4'>
             Add anything that will help your students learn better.
           </div>
         </div>

@@ -1,12 +1,13 @@
-import { db } from "@/lib/db";
-// import { auth } from "@/auth";
-import { auth } from "@/auth";
-import { Chapter, Course, UserProgress } from "@prisma/client";
-import { redirect } from "next/navigation";
-import CourseSidebarItem from "./course-sidebar-item";
-import CourseProgress from "@/components/course-progress";
-import CourseSidebarItem2 from "./course-sidebar-item-2";
-import CourseSidebarItem3 from "./course-sidebar-item-3";
+import { db } from '@/lib/db';
+import { auth } from '@/auth';
+import { Chapter, Course, UserProgress } from '@prisma/client';
+import { redirect } from 'next/navigation';
+import CourseSidebarItem from './course-sidebar-item';
+import CourseProgress from '@/components/course-progress';
+import CourseSidebarItem2 from './course-sidebar-item-2';
+import CourseSidebarItem3 from './course-sidebar-item-3';
+import Logo from '@/app/(dashboard)/_components/logo';
+import { HOME_ROUTE } from '@/routes';
 
 interface CourseSidebarProps {
   course: Course & {
@@ -20,11 +21,11 @@ interface CourseSidebarProps {
 const CourseSidebar = async ({ course, progressCount }: CourseSidebarProps) => {
   const session = await auth();
   if (!session) {
-    return redirect("/");
+    return redirect(HOME_ROUTE);
   }
   const userId = session?.user?.id;
   if (!userId) {
-    return redirect("/");
+    return redirect(HOME_ROUTE);
   }
 
   const purchase = await db.purchase.findUnique({
@@ -37,19 +38,18 @@ const CourseSidebar = async ({ course, progressCount }: CourseSidebarProps) => {
   });
 
   return (
-    <div className="h-full border-r flex flex-col overflow-y-auto shadow-sm">
-      <div className="p-8 flex flex-col border-b">
-        <h1 className="font-semibold">{course.title}</h1>
-
+    <div className='h-full border-r flex flex-col overflow-y-auto shadow-sm'>
+      <div className='p-8 flex flex-col border-b dark:bg-slate-700'>
+        <Logo />
         {purchase && (
-          <div className="mt-10">
-            <CourseProgress variant="success" value={progressCount} />
+          <div className='mt-10'>
+            <CourseProgress variant='success' value={progressCount} />
           </div>
         )}
       </div>
 
-      <div className="flex flex-col w-full">
-        <CourseSidebarItem3 courseId={course.id} label="Course Information" />
+      <div className='flex flex-col w-full'>
+        <CourseSidebarItem3 courseId={course.id} label='课程介绍' />
 
         {course.chapters.map((chapter) => (
           <CourseSidebarItem
@@ -62,7 +62,7 @@ const CourseSidebar = async ({ course, progressCount }: CourseSidebarProps) => {
           />
         ))}
 
-        <CourseSidebarItem2 courseId={course.id} label="Final Exam" />
+        <CourseSidebarItem2 courseId={course.id} label='Final Exam' />
       </div>
     </div>
   );

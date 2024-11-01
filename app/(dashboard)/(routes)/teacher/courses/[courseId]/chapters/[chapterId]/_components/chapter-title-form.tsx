@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import * as z from "zod";
-import axios from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import * as z from 'zod';
+import axios from 'axios';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 import {
   Form,
@@ -11,13 +11,13 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Pencil } from 'lucide-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 interface ChapterTitleFormProps {
   initialData: {
@@ -56,41 +56,41 @@ const ChapterTitleForm = ({
         values
       );
 
-      toast.success("Chapter updated");
+      toast.success('Chapter updated');
       toggleEdit();
       router.refresh();
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     }
   };
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        章节标题
-        <Button variant={"ghost"} onClick={toggleEdit}>
+    <div className='mt-6 border bg-slate-50  dark:bg-gray-900 rounded-md p-4'>
+      <div className='font-medium flex items-center justify-between'>
+        章节标题（必填）
+        <Button variant={'ghost'} onClick={toggleEdit}>
           {isEditing ? (
             <>取消</>
           ) : (
             <>
-              <Pencil className="h-4 w-4 mr-2" />
+              <Pencil className='h-4 w-4 mr-2' />
                修改
             </>
           )}
         </Button>
       </div>
 
-      {!isEditing && <p className="text-sm mt-2">{initialData.title}</p>}
+      {!isEditing && <p className='text-sm mt-2'>{initialData.title}</p>}
 
       {isEditing && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
+            className='space-y-4 mt-4'
           >
             <FormField
               control={form.control}
-              name="title"
+              name='title'
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -106,8 +106,8 @@ const ChapterTitleForm = ({
               )}
             />
 
-            <div className="flex items-center gap-x-2">
-              <Button disabled={!isValid || isSubmitting} type="submit">
+            <div className='flex items-center gap-x-2'>
+              <Button disabled={!isValid || isSubmitting} type='submit'>
                 保存
               </Button>
             </div>

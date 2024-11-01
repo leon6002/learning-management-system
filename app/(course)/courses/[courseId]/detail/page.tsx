@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useSession } from "next-auth/react";
+import { useSession } from 'next-auth/react';
 
-import { Preview } from "@/components/preview";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Star } from "lucide-react";
-import Image from "next/image";
-import FeedbackItem from "./_components/feedback-item";
-import FeedbackForm from "./_components/feedback-form";
-import { useEffect, useState, use } from "react";
-import axios from "axios";
-import { Feedback as Feedback, UserRole } from "@prisma/client";
+import { Preview } from '@/components/preview';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Star } from 'lucide-react';
+import Image from 'next/image';
+import FeedbackItem from './_components/feedback-item';
+import FeedbackForm from './_components/feedback-form';
+import { useEffect, useState, use } from 'react';
+import axios from 'axios';
+import { Feedback as Feedback, UserRole } from '@prisma/client';
 
 const CourseDetailPage = ({
   params,
@@ -23,7 +23,7 @@ const CourseDetailPage = ({
   const { data: session } = useSession();
   if (session?.user?.role === UserRole.ADMIN) {
     // return <p>You are an admin, welcome!</p>
-    console.log("admin");
+    console.log('admin');
   }
   const userId = session?.user?.id;
   const [course, setCourse] = useState<any>(null);
@@ -70,56 +70,56 @@ const CourseDetailPage = ({
   };
 
   return (
-    <div className="p-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 center-content">
+    <div className='p-8'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 gap-8 center-content'>
         <div>
-          <div className="px-[15px] py-[12px] text-3xl font-bold">
+          <div className='px-[15px] py-[12px] text-3xl font-bold'>
             {course?.title}
           </div>
 
           <div
             className={cn(
-              "text-sm mt-2",
-              !course?.description && "text-slate-500 italic"
+              'text-sm mt-2',
+              !course?.description && 'text-slate-500 italic'
             )}
           >
-            {!course?.description && "No description"}
+            {!course?.description && 'No description'}
 
             {course?.description && <Preview value={course?.description} />}
           </div>
 
-          <div className="px-4">
-            <Button className="mt-4 w-full">Continue Studying</Button>
+          <div className='px-4'>
+            <Button className='mt-4 w-full'>继续学习</Button>
           </div>
         </div>
 
         <div>
           {course?.imageUrl && (
-            <div className="w-full h-[350px] relative">
+            <div className='w-full h-[350px] relative'>
               <Image
-                className="rounded-md shadow-md object-cover "
+                className='rounded-md shadow-md object-cover '
                 src={course.imageUrl}
-                alt="course-image"
+                alt='course-image'
                 fill
               />
             </div>
           )}
 
-          <div className="flex mt-6 items-center">
-            <div className="flex items-center text-orange-400 font-bold text-xl">
+          <div className='flex mt-6 items-center'>
+            <div className='flex items-center text-orange-400 font-bold text-xl'>
               {`4/5`}
-              <Star className="w-4 h-4 ml-1 fill-current" />
+              <Star className='w-4 h-4 ml-1 fill-current' />
             </div>
 
-            <div className="ml-3 text-sm text-slate-500">{`(${feedbacks.length} đánh giá)`}</div>
+            <div className='ml-3 text-sm text-slate-500'>{`(${feedbacks.length} 条评价)`}</div>
           </div>
         </div>
       </div>
 
-      <div className="mt-12 pl-4">
-        <div className="text-2xl font-bold mt-8 mb-4">Feedbacks</div>
+      <div className='mt-12 pl-4'>
+        <div className='text-2xl font-bold mt-8 mb-4'>课程评价</div>
 
-        <div className="grid grid-cols-1 gap-y-3">
+        <div className='grid grid-cols-1 gap-y-3'>
           {feedbacks.map((feedback, index) => (
             <FeedbackItem
               key={feedback.id}

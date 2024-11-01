@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import * as z from "zod";
-import axios from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import * as z from 'zod';
+import axios from 'axios';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 import {
   Form,
@@ -11,16 +11,16 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Loader2, PlusCircle } from "lucide-react";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { Chapter, Course } from "@prisma/client";
-import { Input } from "@/components/ui/input";
-import { ChaptersList } from "./chapters-list";
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Loader2, PlusCircle } from 'lucide-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { Chapter, Course } from '@prisma/client';
+import { Input } from '@/components/ui/input';
+import { ChaptersList } from './chapters-list';
 
 interface ChaptersFormProps {
   initialData: Course & { chapters: Chapter[] };
@@ -42,7 +42,7 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
+      title: '',
     },
   });
 
@@ -52,11 +52,11 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
     try {
       await axios.post(`/api/courses/${courseId}/chapters`, values);
 
-      toast.success("Chapter created");
+      toast.success('Chapter created');
       toggleCreating();
       router.refresh();
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     }
   };
 
@@ -68,10 +68,10 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
         list: updateData,
       });
 
-      toast.success("Chapters reordered");
+      toast.success('Chapters reordered');
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     } finally {
       setIsUpdating(false);
     }
@@ -82,21 +82,21 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
   };
 
   return (
-    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
+    <div className='relative mt-6 border bg-slate-50  dark:bg-gray-900 rounded-md p-4'>
       {isUpdating && (
-        <div className="absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-md flex items-center justify-center">
-          <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
+        <div className='absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-md flex items-center justify-center'>
+          <Loader2 className='animate-spin h-6 w-6 text-sky-700' />
         </div>
       )}
 
-      <div className="font-medium flex items-center justify-between">
-        课程章节
-        <Button variant={"ghost"} onClick={toggleCreating}>
+      <div className='font-medium flex items-center justify-between'>
+        课程章节（必填）
+        <Button variant={'ghost'} onClick={toggleCreating}>
           {isCreating ? (
             <>取消</>
           ) : (
             <>
-              <PlusCircle className="h-4 w-4 mr-2" />
+              <PlusCircle className='h-4 w-4 mr-2' />
               添加章节
             </>
           )}
@@ -107,11 +107,11 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
+            className='space-y-4 mt-4'
           >
             <FormField
               control={form.control}
-              name="title"
+              name='title'
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -127,7 +127,7 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
               )}
             />
 
-            <Button disabled={!isValid || isSubmitting} type="submit">
+            <Button disabled={!isValid || isSubmitting} type='submit'>
               创建
             </Button>
           </form>
@@ -138,11 +138,11 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
         <>
           <div
             className={cn(
-              "text-sm mt-2",
-              !initialData.chapters.length && "text-slate-500 italic"
+              'text-sm mt-2',
+              !initialData.chapters.length && 'text-slate-500 italic'
             )}
           >
-            {!initialData.chapters.length && "No chapters yet"}
+            {!initialData.chapters.length && '尚未添加章节'}
             <ChaptersList
               onEdit={onEdit}
               onReorder={onReorder}
@@ -150,8 +150,8 @@ const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
             />
           </div>
 
-          <p className="text-xs text-muted-foreground mt-4">
-            Drag and drop to reorder the chapters
+          <p className='text-xs text-muted-foreground mt-4'>
+            拖拽章节可进行自定义排序
           </p>
         </>
       )}

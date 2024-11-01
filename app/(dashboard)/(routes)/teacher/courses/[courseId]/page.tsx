@@ -1,22 +1,18 @@
-import { IconBadge } from "@/components/icon-badge";
-import { db } from "@/lib/db";
-import { auth } from "@/auth";
-import {
-  CircleDollarSign,
-  File,
-  LayoutDashboard,
-  ListChecks,
-} from "lucide-react";
-import { redirect } from "next/navigation";
-import TitleForm from "./_components/title-form";
-import DescriptionForm from "./_components/description-form";
-import ImageForm from "./_components/image-form";
-import CategoryForm from "./_components/category-form";
-import PriceForm from "./_components/price-form";
-import AttachmentForm from "./_components/attachment-form";
-import ChaptersForm from "./_components/chapters-form";
-import Banner from "@/components/banner";
-import Actions from "./_components/actions";
+import { IconBadge } from '@/components/icon-badge';
+import { db } from '@/lib/db';
+import { auth } from '@/auth';
+import { ArrowLeft, File, LayoutDashboard, ListChecks } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import TitleForm from './_components/title-form';
+import DescriptionForm from './_components/description-form';
+import ImageForm from './_components/image-form';
+import CategoryForm from './_components/category-form';
+import AttachmentForm from './_components/attachment-form';
+import ChaptersForm from './_components/chapters-form';
+import Banner from '@/components/banner';
+import Actions from './_components/actions';
+import Link from 'next/link';
+import { HOME_ROUTE } from '@/routes';
 
 const CourseIdPage = async ({
   params,
@@ -25,12 +21,12 @@ const CourseIdPage = async ({
 }) => {
   const session = await auth();
   if (!session) {
-    return redirect("/");
+    return redirect(HOME_ROUTE);
   }
   const userId = session?.user?.id;
 
   const goToHomePage = () => {
-    redirect("/");
+    redirect(HOME_ROUTE);
   };
 
   if (!userId) {
@@ -43,14 +39,14 @@ const CourseIdPage = async ({
       userId,
     },
     include: {
-      chapters: { orderBy: { position: "asc" } },
-      attachments: { orderBy: { createdAt: "desc" } },
+      chapters: { orderBy: { position: 'asc' } },
+      attachments: { orderBy: { createdAt: 'desc' } },
     },
   });
 
   const categories = await db.category.findMany({
     orderBy: {
-      name: "asc",
+      name: 'asc',
     },
   });
 
@@ -61,7 +57,7 @@ const CourseIdPage = async ({
   const requiredFields = [
     course.title,
     course.description,
-    // course.imageUrl,
+    course.imageUrl,
     // course.price,
     course.categoryId,
 
@@ -82,15 +78,22 @@ const CourseIdPage = async ({
   return (
     <>
       {!course.isPublished && (
-        <Banner label="This course is unpublished. It will not be visible to the learner." />
+        <Banner label='课程尚未发布，发布完之后即对外可见' />
       )}
 
-      <div className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-y-2">
-            <h1 className="text-2xl font-medium">Course setup</h1>
+      <div className='p-6'>
+        <Link
+          href={`/teacher/courses`}
+          className='flex items-center text-sm hover:opacity-75 transition mb-6'
+        >
+          <ArrowLeft className='h-4 w-4 mr-2' />
+          返回课程列表
+        </Link>
+        <div className='flex items-center justify-between'>
+          <div className='flex flex-col gap-y-2'>
+            <h1 className='text-2xl font-medium'>课程设置</h1>
 
-            <span className="text-sm text-slate-700">{completionText}</span>
+            <span className='text-sm text-slate-700'>{completionText}</span>
           </div>
 
           <Actions
@@ -100,12 +103,12 @@ const CourseIdPage = async ({
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-16'>
           <div>
-            <div className="flex items-center gap-x-2">
+            <div className='flex items-center gap-x-2'>
               <IconBadge icon={LayoutDashboard} />
 
-              <h2 className="text-xl">Customize your course</h2>
+              <h2 className='text-xl'>课程信息</h2>
             </div>
 
             <TitleForm initialData={course} courseId={course.id} />
@@ -113,7 +116,28 @@ const CourseIdPage = async ({
             <DescriptionForm initialData={course} courseId={course.id} />
 
             <ImageForm initialData={course} courseId={course.id} />
+          </div>
 
+          <div className='space-y-6'>
+            <div>
+              <div className='flex items-center gap-x-2'>
+                <IconBadge icon={ListChecks} />
+
+                <h2 className='text-xl'>课程章节</h2>
+              </div>
+
+              <ChaptersForm initialData={course} courseId={course.id} />
+            </div>
+
+            {/* <div>
+              <div className="flex items-center gap-x-2">
+                <IconBadge icon={CircleDollarSign} />
+
+                <h2 className="text-xl">课程价格设定</h2>
+              </div>
+
+              <PriceForm initialData={course} courseId={course.id} />
+            </div> */}
             <CategoryForm
               initialData={course}
               courseId={course.id}
@@ -122,34 +146,11 @@ const CourseIdPage = async ({
                 value: category.id,
               }))}
             />
-          </div>
-
-          <div className="space-y-6">
             <div>
-              <div className="flex items-center gap-x-2">
-                <IconBadge icon={ListChecks} />
-
-                <h2 className="text-xl">Course chapters</h2>
-              </div>
-
-              <ChaptersForm initialData={course} courseId={course.id} />
-            </div>
-
-            <div>
-              <div className="flex items-center gap-x-2">
-                <IconBadge icon={CircleDollarSign} />
-
-                <h2 className="text-xl">课程价格设定</h2>
-              </div>
-
-              <PriceForm initialData={course} courseId={course.id} />
-            </div>
-
-            <div>
-              <div className="flex items-center gap-x-2">
+              <div className='flex items-center gap-x-2'>
                 <IconBadge icon={File} />
 
-                <h2 className="text-xl">资源 & 附件</h2>
+                <h2 className='text-xl'>资源 & 附件</h2>
               </div>
 
               <AttachmentForm initialData={course} courseId={course.id} />
