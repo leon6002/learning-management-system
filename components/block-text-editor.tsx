@@ -10,11 +10,11 @@ import editorjsCodecup from '@calumk/editorjs-codecup';
 import Table from '@editorjs/table';
 import { useEffect, useRef } from 'react';
 import Delimiter from '@editorjs/delimiter';
-import EJLaTeX from 'editorjs-latex';
 import Marker from '@editorjs/marker';
 import InlineCode from '@editorjs/inline-code';
 import ColorPlugin from 'editorjs-text-color-plugin';
 import { MDImporter, MDParser } from 'editorjs-md-parser';
+import EJLaTeX from 'editorjs-tool-latex';
 
 type Props = {
   holder: string;
@@ -70,6 +70,7 @@ const EDITOR_TOOLS = {
         '#4CAF50',
         '#8BC34A',
         '#CDDC39',
+        '#FF1300',
         '#FFF',
       ],
       defaultColor: '#FF1300',
@@ -95,9 +96,6 @@ const EDITOR_TOOLS = {
   Math: {
     class: EJLaTeX,
     shortcut: 'CMD+SHIFT+M',
-    config: {
-      css: '.math-input-wrapper { padding: 5px; }',
-    },
   },
   table: {
     //@ts-ignore
@@ -111,20 +109,6 @@ const EDITOR_TOOLS = {
       maxCols: 20,
     },
   },
-  // raw: RawTool,
-  // codeBox: {
-  //   class: CodeBox,
-  //   config: {
-  //     themeURL:
-  //       "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/dracula.min.css", // Optional
-  //     themeName: "atom-one-dark", // Optional
-  //     useDefaultTheme: "light", // Optional. This also determines the background color of the language select drop-down
-  //   },
-  // },
-  // AnyButton: {
-  //   class: AnyButton,
-  //   inlineToolbar: false,
-  // },
 };
 
 const BlockTextEditor = ({
