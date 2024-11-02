@@ -30,6 +30,7 @@ const CourseDetailPage = ({
   const [course, setCourse] = useState<any>(null);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [isFeedbacked, setIsFeedbacked] = useState(false);
+  const [isPurchased, setIsPurchased] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -37,6 +38,7 @@ const CourseDetailPage = ({
         const res = await axios.get(`/api/courses/${courseId}`);
 
         setCourse(res.data);
+        setIsPurchased(res.data?.purchases.length > 0);
       } catch (error) {
         console.log(error);
       }
@@ -90,13 +92,12 @@ const CourseDetailPage = ({
           </div>
 
           <div className='px-4'>
-            {course?.purchases.length == 0 ? (
-              <CourseEnrollButton courseId={courseId} price={course.price!} />
-            ) : (
+            {isPurchased ? (
               <Button variant='success' className='mt-4 w-full' disabled>
                 已注册该课程
               </Button>
-              // <div></div>
+            ) : (
+              <CourseEnrollButton courseId={courseId} price={0} />
             )}
           </div>
         </div>
@@ -140,7 +141,7 @@ const CourseDetailPage = ({
           ))}
         </div>
 
-        {course && !isFeedbacked && (
+        {course && !isFeedbacked && isPurchased && (
           <FeedbackForm
             courseId={course.id}
             afterSentFeedback={afterSentFeedback}
