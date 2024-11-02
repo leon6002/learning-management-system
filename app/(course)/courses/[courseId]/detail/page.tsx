@@ -13,7 +13,7 @@ import { useEffect, useState, use } from 'react';
 import axios from 'axios';
 import { Feedback as Feedback, UserRole } from '@prisma/client';
 import CourseEnrollButton from '../chapters/[chapterId]/_components/course-enroll-button';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { LOGIN_ROUTE } from '@/routes';
 
 const CourseDetailPage = ({
