@@ -16,6 +16,7 @@ import { IconBadge } from '@/components/icon-badge';
 import { RecommendCourse } from '@/types';
 import RecommendedCourses from '@/components/recommended-courses';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 // import { LOGIN_ROUTE, TEACHER_ROUTE } from '@/routes';
 // import { DotPatternBackgroud } from '@/components/background/dot-pattern-backgroud';
 
@@ -26,13 +27,12 @@ type CourseWithProgressWithCategory = Course & {
 };
 
 const Dashboard = () => {
+  const router = useRouter();
   const { data: session } = useSession();
-  console.log('session is', session);
   const userId = session?.user.id as string;
-  console.log(`userId is ${userId}`);
   if (!userId) {
     // redirect(LOGIN_ROUTE);
-    // redirect("/search");
+    return router.push('/search');
   }
   // if (isTeacher(session)) redirect(TEACHER_ROUTE);
 

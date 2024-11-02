@@ -51,10 +51,7 @@ const ChapterIdPage = async ({
   return (
     <div>
       {userProgress?.isCompleted && (
-        <Banner
-          variant={'success'}
-          label='You already completed this chapter.'
-        />
+        <Banner variant={'success'} label='你已完成该章节的学习' />
       )}
 
       {isLocked && (

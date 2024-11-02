@@ -16,12 +16,12 @@ interface SearchPageProps {
 
 const SearchPage = async ({ searchParams }: SearchPageProps) => {
   const session = await auth();
-  if (!session) {
-    return redirect(LOGIN_ROUTE);
-  }
+  // if (!session) {
+  //   return redirect(LOGIN_ROUTE);
+  // }
   const userId = session?.user?.id;
 
-  if (!userId) return redirect(LOGIN_ROUTE);
+  // if (!userId) return redirect(LOGIN_ROUTE);
 
   const categories = await db.category.findMany({
     orderBy: {

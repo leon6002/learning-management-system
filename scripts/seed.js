@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-
+require('dotenv').config({ path: '.env.development' });
 const database = new PrismaClient();
 
 const QUESTIONS = [
@@ -46,13 +46,17 @@ async function main() {
     try {
       await database.category.createMany({
         data: [
-          { name: "Computer Science" },
-          { name: "Music" },
-          { name: "Fitness" },
-          { name: "Photography" },
-          { name: "Accounting" },
-          { name: "Engineering" },
-          { name: "Filming" },
+          { name: "Matlab/Simulink" },
+          { name: "S32DS/EbTresos" },
+          { name: "UDS" },
+          { name: "FreeMaster" },
+          { name: "仿真SIM类" },
+          { name: "Altium Schematic Design" },
+          { name: "LINUX操作系统类" },
+          { name: "AutoSar" },
+          { name: "HIL硬件在环" },
+          { name: "ROS(Robot Operating System)"}
+
         ],
       });
 
@@ -139,8 +143,8 @@ async function main() {
   };
 
   seedingCategories();
-  seedingQuestions();
-  seedingAnswers();
+  // seedingQuestions();
+  // seedingAnswers();
 }
 
 main();

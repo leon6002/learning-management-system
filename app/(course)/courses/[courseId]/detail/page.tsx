@@ -13,6 +13,8 @@ import { useEffect, useState, use } from 'react';
 import axios from 'axios';
 import { Feedback as Feedback, UserRole } from '@prisma/client';
 import CourseEnrollButton from '../chapters/[chapterId]/_components/course-enroll-button';
+import { useRouter } from 'next/router';
+import { LOGIN_ROUTE } from '@/routes';
 
 const CourseDetailPage = ({
   params,
@@ -27,6 +29,10 @@ const CourseDetailPage = ({
     console.log('admin');
   }
   const userId = session?.user?.id;
+  const router = useRouter();
+  if (!userId) {
+    return router.push(LOGIN_ROUTE);
+  }
   const [course, setCourse] = useState<any>(null);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [isFeedbacked, setIsFeedbacked] = useState(false);
