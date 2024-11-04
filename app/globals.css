@@ -105,6 +105,13 @@ body,
     @apply block font-bold text-xs mt-16 mb-16;
   }
 }
+h1.ce-header,
+h2.ce-header,
+h3.ce-header {
+  padding: 0.6em 0 8px !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px !important;
+}
 
 .ql-container {
   font-size: 16px !important;
