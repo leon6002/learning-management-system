@@ -4,6 +4,7 @@ import EditorJS, { OutputData } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import LinkTool from '@editorjs/link';
 import ImageTool from 'editorjs-tool-image';
+import LaTexTool from 'editorjs-tool-latex';
 import Quote from '@editorjs/quote';
 import List from '@editorjs/list';
 import editorjsCodecup from '@calumk/editorjs-codecup';
@@ -14,7 +15,6 @@ import Marker from '@editorjs/marker';
 import InlineCode from '@editorjs/inline-code';
 import ColorPlugin from 'editorjs-text-color-plugin';
 import { MDImporter, MDParser } from 'editorjs-md-parser';
-import EJLaTeX from 'editorjs-tool-latex';
 import { Button } from './ui/button';
 import { FaReadme } from 'react-icons/fa6';
 import { FaEdit } from 'react-icons/fa';
@@ -113,10 +113,14 @@ const EDITOR_TOOLS = {
   code: editorjsCodecup,
   delimiter: Delimiter,
   Math: {
-    class: EJLaTeX,
-    shortcut: 'CMD+SHIFT+M',
+    class: LaTexTool,
     config: {
-      css: '.math-input-wrapper{display:flex;flex-direction:column;width:100%;padding:5px;row-gap:4px}.math-preview{min-height:50px;width:100%;padding:10px;border:1px solid #d3d3d3;border-radius:4px;font-size:20px;text-align:center}.math-preview *{font-family:Katex_Math}.math-input{ border:1px solid #d3d3d3; background:0 0; width:100%; padding:5px 10px; margin-top:5px; font-weight:light; font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; font-size:14px; border-radius:4px; -webkit-border-radius:; -moz-border-radius:; -ms-border-radius:; -o-border-radius:; }.errorMessage{color:red}',
+      placeholder: '在这里输入LaTeX公式...',
+      features: {
+        border: true,
+        stretch: true,
+        hideInput: true,
+      },
     },
   },
   table: {

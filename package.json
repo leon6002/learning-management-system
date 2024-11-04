@@ -68,7 +68,7 @@
     "editorjs-md-parser": "git+https://github.com/leon6002/editorjs-markdown-parser.git",
     "editorjs-style": "^3.0.3",
     "editorjs-tool-image": "^1.1.1",
-    "editorjs-tool-latex": "^1.0.5",
+    "editorjs-tool-latex": "^2.3.1",
     "eslint-config-next": "^15.0.1",
     "framer-motion": "^11.11.11",
     "i18next": "^23.16.4",

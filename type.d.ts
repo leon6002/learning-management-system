@@ -1,6 +1,5 @@
 declare module '@editorjs/link';
 declare module '@calumk/editorjs-codecup';
-declare module 'editorjs-tool-latex';
 declare module 'editorjs-table';
 declare module 'editorjs-md-parser';
 declare module '@editorjs/marker';
