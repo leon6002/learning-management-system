@@ -20,7 +20,7 @@ const ChapterContentPreview = ({ content }: Props) => {
             holder='chapter_content_preview'
             placeholder='在这里输入笔记'
             data={JSON.parse(content)}
-            readonly={true}
+            readonly={{ state: true, toggle: false }}
             autofocus={false}
             onChangeData={(e) => {}}
           />

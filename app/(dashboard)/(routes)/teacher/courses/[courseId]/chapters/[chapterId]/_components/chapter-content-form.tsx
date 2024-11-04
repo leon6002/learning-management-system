@@ -71,6 +71,7 @@ const ChapterContentForm = ({
           //@ts-ignore
           holder='editor_create'
           placeholder='在这里输入章节内容'
+          readonly={{ state: false, toggle: true }}
           data={editorContent}
           onChangeData={(e) => handleEditorChange(e)}
         />

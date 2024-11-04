@@ -119,7 +119,12 @@ body,
 } */
 
 /* @editorjs/quote style override */
-.cdx-input {
+.cdx-input.cdx-quote__caption {
+  display: none !important;
+}
+.cdx-input.cdx-quote__text {
+  min-height: auto !important;
+  color: rgba(0, 0, 0, 0.5) !important;
   border-radius: 0% !important;
   border-top: 0px !important;
   border-right: 0px !important;
@@ -132,30 +137,10 @@ body,
   -ms-border-radius: 0% !important;
   -o-border-radius: 0% !important;
 }
-.cdx-input.cdx-quote__caption,
-.cdx-input.image-tool__caption {
-  display: none !important;
-}
-.cdx-input.cdx-quote__text {
-  min-height: auto !important;
-  color: rgba(0, 0, 0, 0.5) !important;
-}
 
-.image-tool__image {
-  width: 70% !important;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 10px;
-}
-.image-tool__image-picture {
-  border-radius: 8px !important;
-  box-shadow:
-    0 2px 6px 0px rgba(0, 0, 0, 0.2),
-    0 4px 8px 0px rgba(0, 0, 0, 0.19) !important;
-  -webkit-border-radius: 8px !important;
-  -moz-border-radius: 8px !important;
-  -ms-border-radius: 8px !important;
-  -o-border-radius: 8px !important;
-}
+/* .image-tool__image {
+  border: 8px !important;
+  margin-bottom: 10px !important;
+} */
 
 @import '@uploadthing/react/styles.css';

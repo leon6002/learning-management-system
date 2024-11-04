@@ -3,24 +3,27 @@
 import EditorJS, { OutputData } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import LinkTool from '@editorjs/link';
-import ImageTool from '@editorjs/image';
+import ImageTool from 'editorjs-tool-image';
 import Quote from '@editorjs/quote';
 import List from '@editorjs/list';
 import editorjsCodecup from '@calumk/editorjs-codecup';
 import Table from '@editorjs/table';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Delimiter from '@editorjs/delimiter';
 import Marker from '@editorjs/marker';
 import InlineCode from '@editorjs/inline-code';
 import ColorPlugin from 'editorjs-text-color-plugin';
 import { MDImporter, MDParser } from 'editorjs-md-parser';
 import EJLaTeX from 'editorjs-tool-latex';
+import { Button } from './ui/button';
+import { FaReadme } from 'react-icons/fa6';
+import { FaEdit } from 'react-icons/fa';
 
 type Props = {
   holder: string;
   placeholder: string;
   data: any;
-  readonly?: boolean;
+  readonly: { state: boolean; toggle: boolean };
   autofocus?: boolean;
   onChangeData: (content: OutputData) => void;
 };
@@ -83,6 +86,22 @@ const EDITOR_TOOLS = {
     class: InlineCode,
     shortcut: 'CMD+SHIFT+M',
   },
+  image: {
+    class: ImageTool,
+    config: {
+      endpoints: {
+        byFile: `${process.env.NEXT_PUBLIC_HOST}/api/upload/image`, // Your backend file uploader endpoint
+        byUrl: 'http://localhost:8008/fetchUrl', // Your endpoint that provides uploading by Url
+      },
+      features: {
+        border: false,
+        caption: true,
+        stretch: true,
+        background: false,
+      },
+      captionPlaceholder: '在这里输入图片标题',
+    },
+  },
   list: {
     //@ts-ignore
     class: List,
@@ -96,6 +115,9 @@ const EDITOR_TOOLS = {
   Math: {
     class: EJLaTeX,
     shortcut: 'CMD+SHIFT+M',
+    config: {
+      css: '.math-input-wrapper{display:flex;flex-direction:column;width:100%;padding:5px;row-gap:4px}.math-preview{min-height:50px;width:100%;padding:10px;border:1px solid #d3d3d3;border-radius:4px;font-size:20px;text-align:center}.math-preview *{font-family:Katex_Math}.math-input{ border:1px solid #d3d3d3; background:0 0; width:100%; padding:5px 10px; margin-top:5px; font-weight:light; font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; font-size:14px; border-radius:4px; -webkit-border-radius:; -moz-border-radius:; -ms-border-radius:; -o-border-radius:; }.errorMessage{color:red}',
+    },
   },
   table: {
     //@ts-ignore
@@ -119,6 +141,7 @@ const BlockTextEditor = ({
   autofocus,
   onChangeData,
 }: Props) => {
+  const [readOnlyState, setReadOnlyState] = useState(readonly.state);
   if (!readonly) {
     // @ts-ignore
     (EDITOR_TOOLS['markdownParser'] = {
@@ -142,23 +165,6 @@ const BlockTextEditor = ({
           },
         },
       });
-    // @ts-ignore
-    EDITOR_TOOLS['image'] = {
-      class: ImageTool,
-      config: {
-        endpoints: {
-          byFile: `${process.env.NEXT_PUBLIC_HOST}/api/upload/image`, // Your backend file uploader endpoint
-          byUrl: 'http://localhost:8008/fetchUrl', // Your endpoint that provides uploading by Url
-        },
-        features: {
-          border: true,
-          caption: true,
-          stretch: false,
-        },
-        caption: 'hello',
-        captionPlaceholder: '输入图片描述',
-      },
-    };
   }
   //add a reference to editor
   const ref = useRef();
@@ -175,7 +181,7 @@ const BlockTextEditor = ({
         tools: EDITOR_TOOLS,
         placeholder: placeholder,
         // inlineToolbar: ["link", "marker", "bold", "italic"],
-        readOnly: readonly || false,
+        readOnly: readonly.state,
         autofocus: autofocus || false,
         data,
         async onChange(api, event) {
@@ -197,8 +203,27 @@ const BlockTextEditor = ({
     };
   }, []);
 
+  const toggleReadOnly = async () => {
+    if (ref.current) {
+      //@ts-ignore
+      const result = await ref.current.readOnly.toggle();
+      // console.log('toggle:', result);
+      setReadOnlyState(result);
+    }
+  };
+
   return (
-    <div className='w-full flex justify-center'>
+    <div className='relative w-full flex justify-center'>
+      {readonly.toggle && (
+        <div className='absolute left-0 -top-20 w-full'>
+          <div className='w-full max-w-[650px] mx-auto flex justify-end'>
+            <Button onClick={toggleReadOnly}>
+              {readOnlyState ? <FaReadme /> : <FaEdit />}
+              {readOnlyState ? '阅读模式' : '编辑模式'}
+            </Button>
+          </div>
+        </div>
+      )}
       <div
         id={holder}
         className='prose prose:max-w-full prose-code:text-slate-600 prose-pre:bg-transparent dark:text-white dark:prose-headings:text-white w-full min-h-[300px]'

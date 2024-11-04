@@ -133,7 +133,7 @@ const Notes = ({ courseId, chapterId, userId }: Props) => {
             holder='editor_create'
             placeholder='在这里输入笔记'
             data={editorContent}
-            readonly={false}
+            readonly={{ state: false, toggle: true }}
             autofocus={false}
             onChangeData={(e) => handleEditorChange(e)}
           />
