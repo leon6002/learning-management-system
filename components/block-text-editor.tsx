@@ -142,7 +142,8 @@ const BlockTextEditor = ({
   onChangeData,
 }: Props) => {
   const [readOnlyState, setReadOnlyState] = useState(readonly.state);
-  if (!readonly) {
+  if (readonly.toggle) {
+    //if preview toggle is enabled than wen can allow using markdown parser
     // @ts-ignore
     (EDITOR_TOOLS['markdownParser'] = {
       class: MDParser,
@@ -213,11 +214,15 @@ const BlockTextEditor = ({
   };
 
   return (
-    <div className='relative w-full flex justify-center'>
+    <div className='relative w-full flex flex-col justify-center'>
       {readonly.toggle && (
-        <div className='absolute left-0 -top-20 w-full'>
-          <div className='w-full max-w-[650px] mx-auto flex justify-end'>
-            <Button onClick={toggleReadOnly}>
+        <div className='sticky top-24 w-full z-50 mb-5'>
+          <div className='w-full max-w-[950px] mx-auto flex justify-end'>
+            <Button
+              variant='outline'
+              onClick={toggleReadOnly}
+              className='text-xs'
+            >
               {readOnlyState ? <FaReadme /> : <FaEdit />}
               {readOnlyState ? '阅读模式' : '编辑模式'}
             </Button>

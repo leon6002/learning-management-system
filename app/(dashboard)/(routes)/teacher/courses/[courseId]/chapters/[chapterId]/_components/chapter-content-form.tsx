@@ -52,7 +52,7 @@ const ChapterContentForm = ({
 
   return (
     <div className='relative mt-6 border bg-slate-50  dark:bg-gray-900 rounded-md p-4'>
-      <div className='font-medium flex items-center justify-between'>
+      <div className='font-medium flex items-center justify-between mb-5'>
         章节内容（必填）
       </div>
       <DotPattern
