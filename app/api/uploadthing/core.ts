@@ -1,8 +1,8 @@
-import { isTeacher } from "@/lib/teacher";
-import { auth } from "@/auth";
-import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { redirect } from "next/navigation";
-import { LOGIN_ROUTE } from "@/routes";
+import { canCreateCourse } from '@/lib/permissions';
+import { auth } from '@/auth';
+import { createUploadthing, type FileRouter } from 'uploadthing/next';
+import { redirect } from 'next/navigation';
+import { LOGIN_ROUTE } from '@/routes';
 
 const f = createUploadthing();
 
@@ -13,21 +13,21 @@ const handleAuth = async () => {
   }
   const userId = session?.user?.id;
 
-  const isAuthorizied = isTeacher(session);
+  const isAuthorizied = canCreateCourse(session);
 
-  if (!userId || !isAuthorizied) throw new Error("Unauthorized");
+  if (!userId || !isAuthorizied) throw new Error('Unauthorized');
   return { userId };
 };
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
-  courseImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
+  courseImage: f({ image: { maxFileSize: '4MB', maxFileCount: 1 } })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),
-  courseAttachment: f(["text", "image", "video", "audio", "pdf"])
+  courseAttachment: f(['text', 'image', 'video', 'audio', 'pdf'])
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),
-  chapterVideo: f({ video: { maxFileSize: "512GB", maxFileCount: 1 } })
+  chapterVideo: f({ video: { maxFileSize: '512GB', maxFileCount: 1 } })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),
 } satisfies FileRouter;

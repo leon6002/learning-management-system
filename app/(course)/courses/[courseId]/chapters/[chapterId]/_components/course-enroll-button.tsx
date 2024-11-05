@@ -29,12 +29,7 @@ const CourseEnrollButton = ({ courseId, price }: CourseEnrollButtonProps) => {
   };
 
   return (
-    <Button
-      onClick={onClick}
-      disabled={isLoading}
-      size={'sm'}
-      className='w-full md:w-auto'
-    >
+    <Button onClick={onClick} disabled={isLoading} className='w-full'>
       {/* Enroll for {formatPrice(price)} */}
       加入课程
     </Button>

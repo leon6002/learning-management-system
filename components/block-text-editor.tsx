@@ -90,8 +90,7 @@ const EDITOR_TOOLS = {
     class: ImageTool,
     config: {
       endpoints: {
-        byFile: `${process.env.NEXT_PUBLIC_HOST}/api/upload/image`, // Your backend file uploader endpoint
-        byUrl: 'http://localhost:8008/fetchUrl', // Your endpoint that provides uploading by Url
+        byFile: `${process.env.NEXT_PUBLIC_HOST}/api/upload/image`,
       },
       features: {
         border: false,
@@ -106,6 +105,7 @@ const EDITOR_TOOLS = {
     //@ts-ignore
     class: List,
     inlineToolbar: true,
+    shortcut: 'CMD+SHIFT+L',
     config: {
       defaultStyle: 'unordered',
     },

@@ -15,7 +15,7 @@ import { signOut } from 'next-auth/react';
 import { Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
 import { HOME_ROUTE, LOGIN_ROUTE, TEACHER_ROUTE } from '@/routes';
-import { isTeacher } from '@/lib/teacher';
+import { canCreateCourse } from '@/lib/permissions';
 
 type UserButtonProps = {
   session: Session | null;
@@ -78,7 +78,7 @@ const UserButton = ({ session, redirectTo }: UserButtonProps) => {
           </Link>
         </DropdownMenuItem>
 
-        {isTeacher(session) && (
+        {canCreateCourse(session) && (
           <DropdownMenuItem asChild>
             <Link href={TEACHER_ROUTE} className='cursor-pointer pl-5'>
               教师后台

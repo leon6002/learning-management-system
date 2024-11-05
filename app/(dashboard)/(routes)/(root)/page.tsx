@@ -10,7 +10,7 @@ import { STORAGE_KEY } from '@/constants/storage';
 import { DASHBOARD_ITEM_ID } from '@/constants/dashboard-item-id';
 import { cn } from '@/lib/utils';
 // import { useAuth } from '@clerk/nextjs';
-// import { isTeacher } from '@/lib/teacher';
+// import { canCreateCourse } from '@/lib/permissions';
 // import { redirect } from 'next/navigation';
 import { IconBadge } from '@/components/icon-badge';
 import { RecommendCourse } from '@/types';
@@ -34,7 +34,7 @@ const Dashboard = () => {
     // redirect(LOGIN_ROUTE);
     return router.push('/search');
   }
-  // if (isTeacher(session)) redirect(TEACHER_ROUTE);
+  // if (canCreateCourse(session)) redirect(TEACHER_ROUTE);
 
   const [dashboardSetting, setDashboardSetting] = useState<string[]>();
   const [completedCourses, setCompletedCourses] =

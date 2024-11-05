@@ -5,7 +5,7 @@ import { ToastProvider } from '@/components/providers/toast-provider';
 import ConfettiProvider from '@/components/providers/confetti-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SessionProvider } from 'next-auth/react';
-import { isTeacher } from '@/lib/teacher';
+import { canCreateCourse } from '@/lib/permissions';
 import { auth } from '@/auth';
 import FacebookMessenger from '@/components/facebook-messenger';
 
@@ -39,7 +39,7 @@ export default async function RootLayout({
         </ThemeProvider>
       </body>
 
-      {!isTeacher(session) && <FacebookMessenger />}
+      {!canCreateCourse(session) && <FacebookMessenger />}
     </html>
   );
 }

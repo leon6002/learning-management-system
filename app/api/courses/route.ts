@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import { isTeacher } from '@/lib/teacher';
+import { canCreateCourse } from '@/lib/permissions';
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { redirect } from 'next/navigation';
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const userId = session?.user?.id;
     const { title } = await req.json();
 
-    if (!userId || !isTeacher(session)) {
+    if (!userId || !canCreateCourse(session)) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 

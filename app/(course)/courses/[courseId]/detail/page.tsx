@@ -15,6 +15,7 @@ import { Feedback as Feedback, UserRole } from '@prisma/client';
 import CourseEnrollButton from '../chapters/[chapterId]/_components/course-enroll-button';
 import { useRouter } from 'next/navigation';
 import { LOGIN_ROUTE } from '@/routes';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const CourseDetailPage = ({
   params,
@@ -37,6 +38,7 @@ const CourseDetailPage = ({
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [isFeedbacked, setIsFeedbacked] = useState(false);
   const [isPurchased, setIsPurchased] = useState(false);
+  const [isFeedbackLoaded, setIsFeedbackLoaded] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -57,6 +59,7 @@ const CourseDetailPage = ({
         const res = await axios.get(`/api/courses/${courseId}/feedbacks`);
 
         setFeedbacks(res.data);
+        setIsFeedbackLoaded(true);
       } catch (error) {
         console.log(error);
       }
@@ -83,36 +86,52 @@ const CourseDetailPage = ({
       <div className='grid grid-cols-1 sm:grid-cols-2 gap-8 center-content'>
         <div>
           <div className='px-[15px] py-[12px] text-3xl font-bold'>
+            {!course?.title && <Skeleton className='w-[180px] h-[3rem]' />}
             {course?.title}
           </div>
+          {!course?.description && (
+            <div className='p-[15px]'>
+              <Skeleton className='w-[300px] h-[2rem]' />
+            </div>
+          )}
+          {course && (
+            <div
+              className={cn(
+                'text-sm mt-2',
+                !course?.description && 'text-slate-500 italic'
+              )}
+            >
+              {!course?.description && 'No description'}
 
-          <div
-            className={cn(
-              'text-sm mt-2',
-              !course?.description && 'text-slate-500 italic'
-            )}
-          >
-            {!course?.description && 'No description'}
-
-            {course?.description && <Preview value={course?.description} />}
-          </div>
+              {course?.description && <Preview value={course?.description} />}
+            </div>
+          )}
 
           <div className='px-4'>
-            {isPurchased ? (
-              <Button variant='success' className='mt-4 w-full' disabled>
-                已注册该课程
-              </Button>
-            ) : (
-              <CourseEnrollButton courseId={courseId} price={0} />
-            )}
+            {!course && <Skeleton className='w-full h-[40px]' />}
+            {course &&
+              (course?.purchases.length > 0 ? (
+                <Button variant='success' className='mt-4 w-full' disabled>
+                  已注册该课程
+                </Button>
+              ) : (
+                <CourseEnrollButton courseId={courseId} price={0} />
+              ))}
           </div>
         </div>
 
         <div>
+          {!course?.imageUrl && (
+            <Skeleton className='w-[505px] h-[350px] max-w-full' />
+          )}
           {course?.imageUrl && (
-            <div className='w-full h-[350px] relative'>
+            <div className='w-full h-[350px] relative px-[15px]'>
               <Image
-                className='rounded-md shadow-md object-cover '
+                data-loaded='false'
+                onLoad={(event) => {
+                  event.currentTarget.setAttribute('data-loaded', 'true');
+                }}
+                className='rounded-md shadow-md object-cover data-[loaded=false]:animate-pulse data-[loaded=false]:bg-gray-100/10 max-w-full'
                 src={course.imageUrl}
                 alt='course-image'
                 fill
@@ -132,9 +151,17 @@ const CourseDetailPage = ({
       </div>
 
       <div className='mt-12 pl-4'>
-        <div className='text-2xl font-bold mt-8 mb-4'>课程评价</div>
+        <div className='text-2xl font-bold mt-8 mb-4 border-b-[1px] p-4 border-b-gray-200'>
+          课程评价
+        </div>
 
         <div className='grid grid-cols-1 gap-y-3'>
+          {!isFeedbackLoaded && (
+            <>
+              <Skeleton className='w-full h-[130px]' />
+              <Skeleton className='w-full h-[130px]' />
+            </>
+          )}
           {feedbacks.map((feedback, index) => (
             <FeedbackItem
               key={feedback.id}
