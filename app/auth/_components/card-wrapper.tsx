@@ -1,6 +1,6 @@
-"use client";
-import React from "react";
-import { Separator } from "@/components/ui/separator";
+'use client';
+import React from 'react';
+import { Separator } from '@/components/ui/separator';
 import {
   Card,
   CardContent,
@@ -8,10 +8,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import Header from "./header";
-import Social from "./social";
-import BackButton from "./back-button";
+} from '@/components/ui/card';
+import Header from './header';
+import Social from './social';
+import BackButton from './back-button';
 
 interface CardWrapperProps {
   children: React.ReactNode;
@@ -24,12 +24,10 @@ interface CardWrapperProps {
 const CardWrapper = ({
   children,
   headerLabel,
-  backButtonLabel,
-  backButtonHref,
   showSocial,
 }: CardWrapperProps) => {
   return (
-    <Card className="w-[400px] shadow-md">
+    <Card className='w-[330px]  sm:w-[420px] shadow-md'>
       <CardHeader>
         <Header label={headerLabel} />
       </CardHeader>

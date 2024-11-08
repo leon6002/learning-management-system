@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
   const formData = await req.formData();
 
   // Get the file from the form data
-  const file: File = formData.get('image') as File;
+  const file: File | Blob = formData.get('image') as File | Blob;
 
   // Check if a file is received
   if (!file) {
@@ -52,7 +52,15 @@ export async function POST(req: NextRequest) {
   // Convert the file data to a Buffer
   const buffer = Buffer.from(await file.arrayBuffer());
   // Replace spaces in the file name with underscores
-  const filename = file.name.replaceAll(' ', '_');
+  let filename = '';
+  if (file instanceof Blob) {
+    filename = generateRandomFileName();
+  }
+
+  filename = file.name.replaceAll(' ', '_');
+  if (filename === 'blob') {
+    filename = generateRandomFileName();
+  }
   console.log(filename);
   const filePath = path.join(process.cwd(), 'public/assets/' + filename);
 
@@ -71,7 +79,7 @@ export async function POST(req: NextRequest) {
 
   const nowDate = new Date();
   const ossFolder = `audess_edu/image/${nowDate.getFullYear()}/${nowDate.getMonth()}/${nowDate.getDay()}`;
-  const ossFileName = `${new Date().getTime()}_${file.name}`;
+  const ossFileName = `${new Date().getTime()}_${filename}`;
   const ossPath = `${ossFolder}/${ossFileName}`;
   const fullUrl = `${process.env.OSS_DOMAIN}/${ossPath}`;
   const resultUrl = await put(ossPath, filePath);
@@ -95,4 +103,14 @@ export async function POST(req: NextRequest) {
     withBackground: false,
     stretched: false,
   });
+}
+
+function generateRandomFileName(prefix = 'random-', suffix = '.png') {
+  // 生成16位随机数作为文件名的一部分
+  const randomPart = Math.random().toString(36).substring(2, 8);
+
+  // 构建完整的文件名
+  const fileName = `${prefix}${randomPart}${suffix}`;
+
+  return fileName;
 }

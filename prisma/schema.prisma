@@ -22,7 +22,7 @@ enum UserRole {
 model User {
   id            String          @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String?
   emailVerified DateTime?
   image         String?
   password      String?
@@ -56,6 +56,8 @@ model Account {
   @@id([provider, providerAccountId])
 
   @@map("account")
+
+  @@index(userId)
 }
 
 
@@ -183,11 +185,12 @@ model Note {
   id        String   @id @default(uuid())
   userId    String
   chapterId String
+  title     String?
   content   String   @db.LongText
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapter Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
   @@index([chapterId])
 }
@@ -273,4 +276,68 @@ model CourseStatistic {
 
   @@unique([courseId])
   @@index([courseId])
+}
+
+model EmailRecord {
+  id          String @id @default(uuid())
+  userId      String
+  fromEmail   String
+  toEmail     String
+  code        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
+model Jobs {
+  id        String   @id @default(uuid())
+  userId    String
+  chapterId String
+  title     String
+  location  String
+  city      String
+  wageLow   Int
+  wageHigh  Int
+  description String  @db.LongText
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Company {
+  id           String   @id @default(uuid())
+  userId       String
+  name         String
+  description  String
+  logo         String
+  sizeLow      Int
+  sizeHigh     Int
+  addressId    String
+  type         Int
+  industry     String
+  finance      String
+  locationId   String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  address Address[]
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  userId     String
+  companyId  String
+  province   String
+  city       String
+  district   String
+  street     String
+  detail     String
+  isDefault Boolean @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id])
+
+  @@index(companyId)
 }

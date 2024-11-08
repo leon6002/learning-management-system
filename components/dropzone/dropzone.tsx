@@ -2,6 +2,7 @@ import FilePreview from './file-preview';
 import styles from './css/DropZone.module.css';
 import { UploadCloud, ImagePlus } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useUploadImage } from '@/hooks/uploads';
 
 interface DropZoneProps {
   state: { inDropZone: boolean; fileList: File[] };
@@ -92,28 +93,8 @@ const DropZone = ({ state, dispatch, callback }: DropZoneProps) => {
   const uploadFiles = async () => {
     // get the files from the fileList as an array
     let files = state.fileList;
-    // initialize formData object
-    const formData = new FormData();
-    // loop over files and add to formData
-    // files.forEach((file) => formData.append("files", file));
-    formData.set('image', files[0]);
-
-    // Upload the files as a POST request to the server using fetch
-    // Note: /api/fileupload is not a real endpoint, it is just an example
-    const response = await fetch('/api/upload/image', {
-      method: 'POST',
-      body: formData,
-    });
-
-    //successful file upload
-    if (response.ok) {
-      const resData = await response.json();
-      console.log(resData.file.url);
-      callback(resData.file.url);
-    } else {
-      // unsuccessful file upload
-      callback(null);
-    }
+    const url = await useUploadImage(files[0]);
+    callback(url);
   };
 
   return (

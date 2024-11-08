@@ -14,8 +14,15 @@ import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
-import { HOME_ROUTE, LOGIN_ROUTE, TEACHER_ROUTE } from '@/routes';
-import { canCreateCourse } from '@/lib/permissions';
+import {
+  ADMIN_ROUTE,
+  HIRE_ROUTE,
+  HOME_ROUTE,
+  LOGIN_ROUTE,
+  TEACHER_ROUTE,
+  USER_SETTING_ROUTE,
+} from '@/routes';
+import { canCreateCourse, canCreateJob, isAdmin } from '@/lib/permissions';
 
 type UserButtonProps = {
   session: Session | null;
@@ -78,10 +85,31 @@ const UserButton = ({ session, redirectTo }: UserButtonProps) => {
           </Link>
         </DropdownMenuItem>
 
+        <DropdownMenuItem asChild>
+          <Link href={USER_SETTING_ROUTE} className='cursor-pointer pl-5'>
+            个人中心
+          </Link>
+        </DropdownMenuItem>
+
         {canCreateCourse(session) && (
           <DropdownMenuItem asChild>
             <Link href={TEACHER_ROUTE} className='cursor-pointer pl-5'>
               教师后台
+            </Link>
+          </DropdownMenuItem>
+        )}
+        {canCreateJob(session) && (
+          <DropdownMenuItem asChild>
+            <Link href={HIRE_ROUTE} className='cursor-pointer pl-5'>
+              招聘后台
+            </Link>
+          </DropdownMenuItem>
+        )}
+
+        {isAdmin(session) && (
+          <DropdownMenuItem asChild>
+            <Link href={ADMIN_ROUTE} className='cursor-pointer pl-5'>
+              超管后台
             </Link>
           </DropdownMenuItem>
         )}

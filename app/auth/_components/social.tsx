@@ -15,12 +15,12 @@ const Social = () => {
     signIn(provider, { callbackUrl: DEFAULT_LOGIN_REDIRECT });
   };
   return (
-    <div className='flex w-full flex-col items-center gap-y-2'>
+    <div className='flex w-full max-w-[80%] mx-auto flex-col items-center gap-y-4'>
       {/* <div className="flex w-full flex-col items-center gap-x-2"> */}
       <Button
         size='lg'
         variant={'outline'}
-        className='w-full'
+        className='w-full rounded-lg'
         onClick={() => onClick('dy')}
       >
         <FaTiktok /> <span className='px-2 text-sm'>抖音一键登录</span>

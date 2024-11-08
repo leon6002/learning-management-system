@@ -1,7 +1,7 @@
 import { UserRole } from '@prisma/client';
 import { Session } from 'next-auth';
 
-export const permissions = ['createCourse', 'createJob'];
+export const permissions = ['admin', 'createCourse', 'createJob'];
 
 export const canCreateCourse = (session?: Session | null) => {
   // return session?.user?.role === 'TEACHER';
@@ -10,6 +10,10 @@ export const canCreateCourse = (session?: Session | null) => {
 
 export const canCreateJob = (session?: Session | null) => {
   return true;
+};
+
+export const isAdmin = (session?: Session | null) => {
+  return session?.user?.role === 'ADMIN';
 };
 
 export const rolePermission = (role: UserRole): string[] => {

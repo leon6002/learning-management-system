@@ -220,7 +220,7 @@ const BlockTextEditor = ({
   return (
     <div className='relative w-full flex flex-col justify-center'>
       {readonly.toggle && (
-        <div className='sticky top-24 w-full z-50 mb-5'>
+        <div className='sticky top-24 w-full z-50 mb-4'>
           <div className='w-full max-w-[950px] mx-auto flex justify-end'>
             <Button
               variant='outline'
