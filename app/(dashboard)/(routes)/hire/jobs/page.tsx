@@ -1,32 +1,29 @@
-import { DataTable } from "./_components/data-table";
-import { columns } from "./_components/columns";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
+import { DataTable } from './_components/data-table';
+import { columns } from './_components/columns';
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
+import { db } from '@/lib/db';
+import { LOGIN_ROUTE } from '@/routes';
 
-const CoursesPage = async () => {
+const JobsPage = async () => {
   const session = await auth();
-  if (!session) {
-    return redirect("/");
-  }
   const userId = session?.user?.id;
+  if (!userId) return redirect(LOGIN_ROUTE);
 
-  if (!userId) return redirect("/");
-
-  const courses = await db.course.findMany({
+  const jobs = await db.job.findMany({
     where: {
       userId,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
   });
 
   return (
-    <div className="p-6">
-      <DataTable columns={columns} data={courses} />
+    <div className='p-6'>
+      <DataTable columns={columns} data={jobs} />
     </div>
   );
 };
 
-export default CoursesPage;
+export default JobsPage;

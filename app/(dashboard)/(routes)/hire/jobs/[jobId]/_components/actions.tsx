@@ -10,75 +10,74 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface ActionsProps {
-	disabled: boolean;
-	courseId: string;
-	isPublished: boolean;
+  disabled: boolean;
+  jobId: string;
+  isPublished: boolean;
 }
 
-const Actions = ({ disabled, courseId, isPublished }: ActionsProps) => {
-	const router = useRouter();
-	const confetti = useConfettiStore();
-	const [isLoading, setIsLoading] = useState(false);
+const Actions = ({ disabled, jobId, isPublished }: ActionsProps) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
-	const onClick = async () => {
-		try {
-			setIsLoading(true);
+  const onClick = async () => {
+    try {
+      setIsLoading(true);
 
-			if (isPublished) {
-				await axios.patch(`/api/courses/${courseId}/unpublish`);
+      if (isPublished) {
+        await axios.patch(`/api/jobs/${jobId}/unpublish`);
 
-				toast.success('Course unpublished');
-			} else {
-				await axios.patch(`/api/courses/${courseId}/publish`);
+        toast.success('职位已撤回');
+      } else {
+        await axios.patch(`/api/jobs/${jobId}/publish`);
 
-				toast.success('Course published');
+        toast.success('职位发布成功');
 
-				confetti.onOpen();
-			}
+        // confetti.onOpen();
+      }
 
-			router.refresh();
-		} catch {
-			toast.error('Something went wrong');
-		} finally {
-			setIsLoading(false);
-		}
-	};
+      router.refresh();
+    } catch {
+      toast.error('Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-	const onDelete = async () => {
-		try {
-			setIsLoading(true);
+  const onDelete = async () => {
+    try {
+      setIsLoading(true);
 
-			await axios.delete(`/api/courses/${courseId}`);
+      await axios.delete(`/api/jobs/${jobId}`);
 
-			toast.success('Course deleted');
+      toast.success('职位已删除');
 
-			router.refresh();
-			router.push(`/teacher/courses`);
-		} catch {
-			toast.error('Something went wrong');
-		} finally {
-			setIsLoading(false);
-		}
-	};
+      router.refresh();
+      router.push(`/hire/jobs`);
+    } catch {
+      toast.error('出错了');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-	return (
-		<div className="flex items-center gap-x-2">
-			<Button
-				onClick={onClick}
-				disabled={disabled || isLoading}
-				variant={'outline'}
-				size={'sm'}
-			>
-				{isPublished ? 'Unpublish' : 'Publish'}
-			</Button>
+  return (
+    <div className='flex items-center gap-x-2'>
+      <Button
+        onClick={onClick}
+        disabled={disabled || isLoading}
+        variant={'outline'}
+        size={'sm'}
+      >
+        {isPublished ? '下架职位' : '发布职位'}
+      </Button>
 
-			<ConfirmModal onConfirm={onDelete}>
-				<Button size={'sm'} disabled={isLoading}>
-					<Trash className="w-4 h-4" />
-				</Button>
-			</ConfirmModal>
-		</div>
-	);
+      <ConfirmModal onConfirm={onDelete}>
+        <Button size={'sm'} disabled={isLoading}>
+          <Trash className='w-4 h-4' />
+        </Button>
+      </ConfirmModal>
+    </div>
+  );
 };
 
 export default Actions;

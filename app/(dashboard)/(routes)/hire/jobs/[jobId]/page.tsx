@@ -3,66 +3,57 @@ import { db } from '@/lib/db';
 import { auth } from '@/auth';
 import { ArrowLeft, File, LayoutDashboard, ListChecks } from 'lucide-react';
 import { redirect } from 'next/navigation';
-import TitleForm from './_components/title-form';
-import DescriptionForm from './_components/description-form';
-import ImageForm from './_components/image-form';
-import CategoryForm from './_components/category-form';
-import AttachmentForm from './_components/attachment-form';
-import ChaptersForm from './_components/chapters-form';
 import Banner from '@/components/banner';
 import Actions from './_components/actions';
 import Link from 'next/link';
 import { HOME_ROUTE } from '@/routes';
+import JobBody from './_components/job-body';
 
-const CourseIdPage = async ({
+const JobIdPage = async ({
   params,
 }: {
-  params: Promise<{ courseId: string }>;
+  params: Promise<{ jobId: string }>;
 }) => {
   const session = await auth();
-  if (!session) {
+  const userId = session?.user?.id;
+  if (!userId) {
     return redirect(HOME_ROUTE);
   }
-  const userId = session?.user?.id;
-
-  const goToHomePage = () => {
-    redirect(HOME_ROUTE);
-  };
-
-  if (!userId) {
-    return goToHomePage();
-  }
-  const { courseId } = await params;
-  const course = await db.course.findUnique({
+  const { jobId } = await params;
+  const job = await db.job.findUnique({
     where: {
-      id: courseId,
+      id: jobId,
       userId,
     },
     include: {
-      chapters: { orderBy: { position: 'asc' } },
-      attachments: { orderBy: { createdAt: 'desc' } },
+      address: true,
+      jobCourseRelation: {
+        include: {
+          simpleCourse: true,
+        },
+        orderBy: { position: 'asc' },
+      },
     },
   });
-
-  const categories = await db.category.findMany({
+  console.log('job from hire>jobs>[jobId]>page: ', job);
+  if (!job) {
+    return redirect(HOME_ROUTE);
+  }
+  const categories = await db.jobCategory.findMany({
     orderBy: {
       name: 'asc',
     },
   });
 
-  if (!course) {
-    return goToHomePage();
-  }
-
   const requiredFields = [
-    course.title,
-    course.description,
-    course.imageUrl,
-    // course.price,
-    course.categoryId,
+    job.title,
+    job.description,
+    job.wageLow,
+    job.wageHigh,
+    job.categoryId,
 
     // Check if at least one chapter is published
-    course.chapters.some((chapter) => chapter.isPublished),
+    // course.chapters.some((chapter) => chapter.isPublished),
   ];
 
   const totalFields = requiredFields.length;
@@ -77,89 +68,34 @@ const CourseIdPage = async ({
 
   return (
     <>
-      {!course.isPublished && (
-        <Banner label='课程尚未发布，发布完之后即对外可见' />
+      {!job.isPublished && (
+        <Banner label='职位尚未发布，发布完之后即对外可见' />
       )}
 
       <div className='p-6'>
         <Link
-          href={`/teacher/courses`}
+          href={`/hire/jobs`}
           className='flex items-center text-sm hover:opacity-75 transition mb-6'
         >
           <ArrowLeft className='h-4 w-4 mr-2' />
-          返回课程列表
+          返回职位列表
         </Link>
         <div className='flex items-center justify-between'>
           <div className='flex flex-col gap-y-2'>
-            <h1 className='text-2xl font-medium'>课程设置</h1>
-
+            <h1 className='text-2xl font-medium'>职位设置</h1>
             <span className='text-sm text-slate-700'>{completionText}</span>
           </div>
 
           <Actions
             disabled={!isComplete}
-            courseId={courseId}
-            isPublished={course.isPublished}
+            jobId={job.id}
+            isPublished={job.isPublished}
           />
         </div>
-
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-16'>
-          <div>
-            <div className='flex items-center gap-x-2'>
-              <IconBadge icon={LayoutDashboard} />
-
-              <h2 className='text-xl'>课程信息</h2>
-            </div>
-
-            <TitleForm initialData={course} courseId={course.id} />
-
-            <DescriptionForm initialData={course} courseId={course.id} />
-
-            <ImageForm initialData={course} courseId={course.id} />
-          </div>
-
-          <div className='space-y-6'>
-            <div>
-              <div className='flex items-center gap-x-2'>
-                <IconBadge icon={ListChecks} />
-
-                <h2 className='text-xl'>课程章节</h2>
-              </div>
-
-              <ChaptersForm initialData={course} courseId={course.id} />
-            </div>
-
-            {/* <div>
-              <div className="flex items-center gap-x-2">
-                <IconBadge icon={CircleDollarSign} />
-
-                <h2 className="text-xl">课程价格设定</h2>
-              </div>
-
-              <PriceForm initialData={course} courseId={course.id} />
-            </div> */}
-            <CategoryForm
-              initialData={course}
-              courseId={course.id}
-              options={categories.map((category) => ({
-                label: category.name,
-                value: category.id,
-              }))}
-            />
-            <div>
-              <div className='flex items-center gap-x-2'>
-                <IconBadge icon={File} />
-
-                <h2 className='text-xl'>资源 & 附件</h2>
-              </div>
-
-              <AttachmentForm initialData={course} courseId={course.id} />
-            </div>
-          </div>
-        </div>
+        <JobBody jobId={job.id} categories={categories} initialData={job!} />
       </div>
     </>
   );
 };
 
-export default CourseIdPage;
+export default JobIdPage;

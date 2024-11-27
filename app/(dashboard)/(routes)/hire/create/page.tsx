@@ -40,8 +40,11 @@ const CreateNewCoursePage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.post('/api/courses', values);
-      router.push(`/teacher/courses/${response.data.id}`);
+      const response = await axios.post('/api/jobs', {
+        ...values,
+        description: '',
+      });
+      router.push(`/hire/jobs/${response.data.id}`);
       toast.success('Course created successfully');
     } catch (error) {
       toast.error('出错了···');
@@ -50,13 +53,10 @@ const CreateNewCoursePage = () => {
 
   return (
     <div className='max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6'>
-      <div>
+      <div className='min-w-[300px] text-left'>
         <h1 className='text-2xl'>职位名称</h1>
 
-        <p className='text-sm text-slate-600'>
-          {`What would you like to name your course? Don't worry, you can change
-					this later.`}
-        </p>
+        <p className='text-sm text-slate-600'>{`请输入要新建的职位名称`}</p>
 
         <Form {...form}>
           <form
@@ -68,17 +68,17 @@ const CreateNewCoursePage = () => {
               name='title'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Course title</FormLabel>
+                  {/* <FormLabel>职位名称</FormLabel> */}
 
                   <FormControl>
                     <Input
                       disabled={isSubmitting}
-                      placeholder={`e.g. "Advance web development"`}
+                      placeholder={`比如：开发工程师`}
                       {...field}
                     />
                   </FormControl>
 
-                  <FormDescription>请输入职位名称：</FormDescription>
+                  {/* <FormDescription>请输入职位名称：</FormDescription> */}
 
                   <FormMessage />
                 </FormItem>
@@ -86,15 +86,14 @@ const CreateNewCoursePage = () => {
             />
 
             <div className='flex items-center gap-x-2'>
+              <Button type='submit' disabled={!isValid || isSubmitting}>
+                继续
+              </Button>
               <Link href={'/'}>
                 <Button type='button' variant={'ghost'}>
                   取消
                 </Button>
               </Link>
-
-              <Button type='submit' disabled={!isValid || isSubmitting}>
-                继续
-              </Button>
             </div>
           </form>
         </Form>

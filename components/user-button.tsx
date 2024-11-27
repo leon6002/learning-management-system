@@ -93,11 +93,18 @@ const UserButton = ({ session, redirectTo }: UserButtonProps) => {
 
         {canCreateCourse(session) && (
           <DropdownMenuItem asChild>
-            <Link href={TEACHER_ROUTE} className='cursor-pointer pl-5'>
-              教师后台
+            <Link href={'/simple-course'} className='cursor-pointer pl-5'>
+              课程创作
             </Link>
           </DropdownMenuItem>
         )}
+        {/* {canCreateCourse(session) && (
+          <DropdownMenuItem asChild>
+            <Link href={'/teacher/courses'} className='cursor-pointer pl-5'>
+              教师后台
+            </Link>
+          </DropdownMenuItem>
+        )} */}
         {canCreateJob(session) && (
           <DropdownMenuItem asChild>
             <Link href={HIRE_ROUTE} className='cursor-pointer pl-5'>

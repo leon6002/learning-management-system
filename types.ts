@@ -1,4 +1,12 @@
-import { Course } from '@prisma/client';
+import {
+  Address,
+  Course,
+  GeoDict,
+  Job,
+  JobCategory,
+  JobCourseRelation,
+  SimpleCourse,
+} from '@prisma/client';
 
 interface RecommendCourse {
   id: string;
@@ -12,3 +20,17 @@ interface RecommendCourse {
 }
 
 export { type RecommendCourse };
+
+export type JobDetail = Job & {
+  jobCourseRelation: (JobCourseRelation & {
+    simpleCourse: { id: string; title: string };
+  })[];
+  jobCategory: JobCategory | null;
+  address:
+    | (Address & {
+        geoDictCity: { name: string };
+        geoDictProvince: { name: string };
+        geoDictDistrict: { name: string } | null;
+      })
+    | null;
+};

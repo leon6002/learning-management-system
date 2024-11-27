@@ -19,7 +19,7 @@ const routes = {
   mycourese: {
     icon: GraduationCap,
     label: '我的课程',
-    href: '/',
+    href: '/mycourse',
     needPermission: [],
   },
   myNotes: {
@@ -31,7 +31,13 @@ const routes = {
   searchCourse: {
     icon: Compass,
     label: '浏览课程',
-    href: '/search',
+    href: '/courses/search',
+    needPermission: [],
+  },
+  searchJob: {
+    icon: Compass,
+    label: '浏览职位',
+    href: '/',
     needPermission: [],
   },
   jobs: {
@@ -67,6 +73,11 @@ const routes = {
     label: '招聘数据',
     href: '/hire/analytics',
   },
+  simpleCourse: {
+    icon: GraduationCap,
+    label: '公开课程',
+    href: '/public-courses',
+  },
   userManage: {
     icon: List,
     label: '用户管理',
@@ -86,17 +97,16 @@ const routes = {
 };
 
 const learnerRoutes = [
+  routes.searchJob,
+  routes.simpleCourse,
   routes.searchCourse,
-  routes.mycourese,
-  routes.myNotes,
-  routes.jobs,
 ];
 
-const teacherRoutes = [routes.courseManage, routes.courseStatics];
+const teacherRoutes = [routes.courseManage];
 
-const hireRoutes = [routes.hireManage, routes.jobManage, routes.hireStatics];
+const hireRoutes = [routes.jobManage];
 
-const settingRoutes = [routes.profile, routes.personalization];
+const settingRoutes = [routes.profile];
 
 const adminRoutes = [routes.userManage];
 
@@ -104,7 +114,8 @@ const SidebarRoutes = () => {
   const pathname = usePathname();
 
   const isTeacherPage = pathname?.startsWith('/teacher');
-  const isHirePage = pathname?.startsWith('/hire');
+  const isHirePage =
+    pathname?.startsWith('/hire') || pathname?.startsWith('/simple-course');
   const isAdminPage = pathname?.startsWith('/admin');
   const isSettingsPage = pathname?.startsWith('/settings');
 

@@ -14,9 +14,9 @@ export const LOGIN_ROUTE = '/auth/login';
 
 export const TEACHER_ROUTE = '/teacher/courses';
 
-export const ADMIN_ROUTE = '/admin/dashboard';
+export const ADMIN_ROUTE = '/admin/users';
 
-export const HIRE_ROUTE = '/hire/dashboard';
+export const HIRE_ROUTE = '/hire/jobs';
 
 export const HOME_ROUTE = '/';
 

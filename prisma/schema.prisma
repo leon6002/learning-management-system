@@ -94,6 +94,13 @@ model Category {
   courses Course[]
 }
 
+model JobCategory {
+  id   String @id @default(uuid())
+  name String @unique
+
+  job Job[]
+}
+
 model Attachment {
   id        String   @id @default(uuid())
   name      String
@@ -292,18 +299,24 @@ model EmailRecord {
 model Job {
   id        String   @id @default(uuid())
   userId    String
-  chapterId String
+  categoryId String?
   title     String
   description String  @db.LongText
   isPublished Boolean  @default(false)
-  location  String
-  city      String
-  wageLow   Int
-  wageHigh  Int
+  addressId String?
+  wageLow   Int?
+  wageHigh  Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   jobCourseRelation JobCourseRelation[]
+  jobCategory JobCategory? @relation(fields: [categoryId], references: [id])
+  address Address? @relation(fields: [addressId], references: [id])
+
+  @@index([addressId])
+  @@index([categoryId])
+  
+
 }
 
 
@@ -323,25 +336,34 @@ model Company {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  address Address[]
+  address Address @relation(fields: [addressId], references: [id])
+
+  @@index([addressId])
 }
 
 model Address {
   id         String   @id @default(uuid())
   userId     String
-  companyId  String
-  province   String
-  city       String
-  district   String
+  province   Int
+  city       Int
+  district   Int?
   street     String
   detail     String
-  isDefault Boolean @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  
+  company Company[]
 
-  company Company @relation(fields: [companyId], references: [id])
+  job Job[]
 
-  @@index(companyId)
+  geoDictCity GeoDict @relation("AddressToCity",fields: [city], references: [id])
+  geoDictProvince GeoDict @relation("AddressToProvince",fields: [province], references: [id])
+  geoDictDistrict GeoDict? @relation("AddressToDistrict", fields: [district], references: [id])
+
+
+  @@index([city])
+  @@index([province])
+  @@index([district])
 }
 
 model SimpleCourse {
@@ -372,4 +394,17 @@ model JobCourseRelation {
   @@unique([jobId, simpleCourseId])
   @@index([jobId])
   @@index([simpleCourseId])
+}
+
+model GeoDict {
+  id        Int    @id @default(autoincrement())
+  name      String
+  level     Int
+  pid       String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  addressesForProvince Address[] @relation("AddressToProvince")
+  addressesForCity     Address[] @relation("AddressToCity")
+  addressesForDistrict Address[] @relation("AddressToDistrict")
 }

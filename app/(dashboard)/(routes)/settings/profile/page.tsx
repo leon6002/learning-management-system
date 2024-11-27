@@ -16,12 +16,12 @@ const ProfilePage = async () => {
   return (
     <div className='w-full h-full flex justify-center px-10 py-5'>
       <div className='w-[650px] max-w-[650px]'>
-        <UsernameForm />
-        <hr className='my-10' />
         <AvatarForm />
         <hr className='my-10' />
-        <EmailForm />
+        <UsernameForm />
         <hr className='my-10' />
+        <EmailForm />
+        {/* <hr className='my-10' /> */}
       </div>
     </div>
   );

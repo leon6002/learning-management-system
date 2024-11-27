@@ -11,7 +11,7 @@ const HireLayout = async ({ children }: { children: React.ReactNode }) => {
   }
   const userId = session?.user?.id;
   console.log(`userId is ${userId}`);
-  if (!canCreateJob(session)) return redirect(HOME_ROUTE);
+  // if (!canCreateJob(session)) return redirect(HOME_ROUTE);
 
   return <>{children}</>;
 };

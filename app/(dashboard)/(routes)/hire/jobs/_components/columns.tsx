@@ -1,107 +1,107 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Course } from '@prisma/client';
+import { Course, Job } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal, Pencil } from 'lucide-react';
 
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-export const columns: ColumnDef<Course>[] = [
-	{
-		accessorKey: 'title',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-				>
-					Title
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
-	},
-	{
-		accessorKey: 'price',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-				>
-					Price
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
-		cell: ({ row }) => {
-			const price = parseFloat(row.getValue('price') || '0');
+export const columns: ColumnDef<Job>[] = [
+  {
+    accessorKey: 'title',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          职位名称
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: 'wage',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          薪资区间
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      console.log('row is', row);
+      const wageLow = row.original.wageLow || 0;
+      const wageHigh = row.original.wageHigh || 0;
+      return (
+        <span>
+          {wageLow}元 ~ {wageHigh}元
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: 'isPublished',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          是否发布
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const isPublished = row.original.isPublished || false;
 
-			const formatted = new Intl.NumberFormat('en-US', {
-				style: 'currency',
-				currency: 'USD',
-			}).format(price);
+      return (
+        <Badge className={cn('bg-slate-500', isPublished && 'bg-sky-700')}>
+          {isPublished ? '已发布' : '未发布'}
+        </Badge>
+      );
+    },
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const { id } = row.original;
 
-			return <span>{formatted}</span>;
-		},
-	},
-	{
-		accessorKey: 'isPublished',
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-				>
-					Published
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
-		cell: ({ row }) => {
-			const isPublished = row.getValue('isPublished') || false;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant={'ghost'} className='h-4 w-8 p-0'>
+              <span className='sr-only'>Open menu</span>
 
-			return (
-				<Badge className={cn('bg-slate-500', isPublished && 'bg-sky-700')}>
-					{isPublished ? 'Published' : 'Draft'}
-				</Badge>
-			);
-		},
-	},
-	{
-		id: 'actions',
-		cell: ({ row }) => {
-			const { id } = row.original;
+              <MoreHorizontal className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
 
-			return (
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button variant={'ghost'} className="h-4 w-8 p-0">
-							<span className="sr-only">Open menu</span>
-
-							<MoreHorizontal className="h-4 w-4" />
-						</Button>
-					</DropdownMenuTrigger>
-
-					<DropdownMenuContent>
-						<Link href={`/teacher/courses/${id}`}>
-							<DropdownMenuItem>
-								<Pencil className="h-4 w-4 mr-2" />
-								Edit
-							</DropdownMenuItem>
-						</Link>
-					</DropdownMenuContent>
-				</DropdownMenu>
-			);
-		},
-	},
+          <DropdownMenuContent>
+            <Link href={`/hire/jobs/${id}`}>
+              <DropdownMenuItem>
+                <Pencil className='h-4 w-4 mr-2' />
+                编辑职位信息
+              </DropdownMenuItem>
+            </Link>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
 ];
