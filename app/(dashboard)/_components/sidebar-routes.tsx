@@ -96,11 +96,7 @@ const routes = {
   },
 };
 
-const learnerRoutes = [
-  routes.searchJob,
-  routes.simpleCourse,
-  routes.searchCourse,
-];
+const learnerRoutes = [routes.searchJob, routes.simpleCourse];
 
 const teacherRoutes = [routes.courseManage];
 
